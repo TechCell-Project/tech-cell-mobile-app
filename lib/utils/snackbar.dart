@@ -7,7 +7,7 @@ void showSnackBarError(BuildContext context, String text) {
     SnackBar(
       content: Container(
         padding: const EdgeInsets.all(8),
-        height: 70,
+        height: 100,
         decoration: const BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(
@@ -72,7 +72,7 @@ void showSnackBarSuccess(BuildContext context, String text) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'That bai',
+                    'Thanh cong',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -99,10 +99,10 @@ void httpErrorHandle({
 }) {
   switch (response.statusCode) {
     case 200:
-      onSuccess;
+      onSuccess();
       break;
     case 201:
-      onSuccess;
+      onSuccess();
       break;
     case 400:
       showSnackBarError(
@@ -110,14 +110,21 @@ void httpErrorHandle({
         'Your account email or password is invalid',
       );
       break;
-    case 404:
-      showSnackBarError(context, 'loi ko tim thay');
-      break;
-    case 422:
+    case 401:
       showSnackBarError(
         context,
-        jsonDecode(response.body)['error'],
+        'Tài khoản hoặc mật khẩu sai',
       );
+    case 403:
+      showSnackBarError(context, 'Tài khoản của bạn bị khóa!');
+    case 404:
+      showSnackBarError(
+        context,
+        'Tài khoản hoặc mật khẩu bị sai',
+      );
+      break;
+    case 422:
+      showSnackBarError(context, 'Tài khoản đã được sử dụng');
       break;
     case 429:
       showSnackBarError(

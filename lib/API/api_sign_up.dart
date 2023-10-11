@@ -24,6 +24,7 @@ class AuthSignUp {
         password: password,
         re_password: rePassword,
         accessToken: '',
+        refreshToken: '',
       );
       http.Response res = await http.post(
         Uri.parse('${uri}auth/register'),
@@ -32,7 +33,6 @@ class AuthSignUp {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      print({res.body, res.statusCode});
       // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,

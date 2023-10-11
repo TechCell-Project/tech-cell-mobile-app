@@ -5,13 +5,14 @@ class ProductApi {
   String descrpition;
   String catgory;
   String image;
-  ProductApi(
-      {required this.id,
-      required this.title,
-      required this.price,
-      required this.descrpition,
-      required this.catgory,
-      required this.image});
+  ProductApi({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.descrpition,
+    required this.catgory,
+    required this.image,
+  });
   factory ProductApi.fromJson(Map<String, dynamic> json) {
     return ProductApi(
         id: json['id'],
