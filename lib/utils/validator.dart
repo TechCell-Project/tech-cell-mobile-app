@@ -24,4 +24,12 @@ class Validator {
       return null;
     }
   }
+
+  static String? validatePhoneNumber(String value) {
+    if (value.length < 10 || value.length > 10) {
+      return '🚩 Vui lòng nhập đúng số điện thoại';
+    } else {
+      return null;
+    }
+  }
 }

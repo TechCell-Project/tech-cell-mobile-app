@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
+import 'package:my_app/Pages/Tabs/forgot_tap.dart';
 import 'package:my_app/Pages/Tabs/sigup_tap.dart';
 import 'package:my_app/Widgets/Login/button_login.dart';
 import 'package:my_app/utils/constant.dart';
@@ -23,14 +24,21 @@ class _LoginTapState extends State<LoginTap> {
     if (_formKey.currentState!.validate()) {
       authLogin.loginUser(
         context: context,
-        emailOrUsername: emailOrUserName.text,
-        password: password.text,
+        emailOrUsername: emailOrUserName.text.trim(),
+        password: password.text.trim(),
       );
     }
   }
 
+  void signinGoogle() {
+    authLogin.signInWithGoogle(context: context);
+    // authLogin.signOut(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    emailOrUserName.text = 'doann221';
+    password.text = 'doann124578';
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -82,6 +90,7 @@ class _LoginTapState extends State<LoginTap> {
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               color: Colors.grey,
+                              size: 25,
                             ),
                           ),
                           isDense: true,
@@ -90,7 +99,12 @@ class _LoginTapState extends State<LoginTap> {
                       Align(
                         alignment: Alignment.topRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ForgotTap()));
+                          },
                           child: const Text(
                             'Quên Mật Khẩu?',
                             style: TextStyle(
@@ -160,11 +174,13 @@ class _LoginTapState extends State<LoginTap> {
                       ),
                       const SizedBox(height: 20),
                       ButtonLogin(
+                        loginWith: () {},
                         image: 'assets/icons/facebook.png',
                         text: 'Đăng nhập bằng FaceBook',
                       ),
                       const SizedBox(height: 20),
                       ButtonLogin(
+                        loginWith: signinGoogle,
                         image: 'assets/icons/google.png',
                         text: 'Đăng nhập bằng Google',
                       ),

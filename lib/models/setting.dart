@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/home_screen.dart';
+import 'package:my_app/Pages/Tabs/address_user.dart';
+import 'package:my_app/Pages/Tabs/change_password.dart';
+import 'package:my_app/Pages/Tabs/information_user.dart';
 
 class SettingModel {
   String title;
@@ -12,23 +15,18 @@ class SettingModel {
 
 final List<SettingModel> settings = [
   SettingModel(
-    title: 'Person Data',
-    route: const HomeScreen(),
+    title: 'Hồ sơ',
+    route: const InformationUser(),
     icon: CupertinoIcons.person_fill,
   ),
   SettingModel(
-    title: 'Setting',
-    route: const HomeScreen(),
-    icon: Icons.settings,
-  ),
-  SettingModel(
-    title: 'E-statement',
-    route: const HomeScreen(),
+    title: 'Đổi mật khẩu',
+    route: const ChangePassword(),
     icon: CupertinoIcons.doc_fill,
   ),
   SettingModel(
-    title: 'Refferal Code',
-    route: const HomeScreen(),
+    title: 'Địa chỉ',
+    route: const AddressUser(),
     icon: CupertinoIcons.heart_fill,
   ),
 ];

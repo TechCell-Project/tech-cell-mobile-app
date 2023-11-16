@@ -33,8 +33,8 @@ class _ProductCardState extends State<ProductCard> {
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {
-          return OverflowBox(
-            maxHeight: 290,
+          return SizedBox(
+            height: 290,
             child: Container(
               margin: const EdgeInsets.only(top: 10),
               child: Container(

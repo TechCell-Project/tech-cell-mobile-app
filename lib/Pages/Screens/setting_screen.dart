@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
 import 'package:my_app/Pages/Tabs/user_profile.dart';
 import 'package:my_app/Providers/user_provider.dart';
@@ -14,8 +13,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final AuthLogin authLogin = AuthLogin();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

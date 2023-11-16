@@ -7,14 +7,16 @@ class ButtonLogin extends StatelessWidget {
     super.key,
     required this.image,
     required this.text,
+    required this.loginWith,
   });
   String text;
   String image;
+  final Function()? loginWith;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: loginWith,
       child: Container(
         height: 50,
         padding: const EdgeInsets.only(left: 50),

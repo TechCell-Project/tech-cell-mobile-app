@@ -27,11 +27,11 @@ class _SignUpTapState extends State<SignUpTap> {
       authSignUp.signUpUser(
         context: context,
         email: email.text,
-        userName: userName.text,
+        userName: userName.text.trim(),
         firstName: firstName.text,
         lastName: lastName.text,
-        password: password.text,
-        rePassword: rePassword.text,
+        password: password.text.trim(),
+        rePassword: rePassword.text.trim(),
       );
     }
   }
