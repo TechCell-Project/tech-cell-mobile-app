@@ -37,8 +37,6 @@ class _LoginTapState extends State<LoginTap> {
 
   @override
   Widget build(BuildContext context) {
-    emailOrUserName.text = 'doann221';
-    password.text = 'doann124578';
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
