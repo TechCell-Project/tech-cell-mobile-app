@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/main_screen.dart';
+import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => UserProvider()),
+       ChangeNotifierProvider<ProductProvider>(create: (context) => ProductProvider()),
       // ChangeNotifierProvider(create: (_) => AddressProvider()),
     ],
     child: const MyApp(),

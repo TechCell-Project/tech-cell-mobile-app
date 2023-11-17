@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:my_app/models/category_model.dart';
 
 class Category extends StatefulWidget {
@@ -19,49 +18,55 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     _getCategory();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          height: 15,
-        ),
-        SizedBox(
-          height: 100,
-          child: ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(width: 25),
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            itemCount: categories.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return Container(
-                height: 25,
-                width: 100,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 254, 201, 197),
-                    borderRadius: BorderRadius.circular(30)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset(categories[index].iconPath),
-                    ),
-                    Text(
-                      categories[index].name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromARGB(255, 187, 187, 187),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+      child: Container(
+        height: 250,
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.15,
           ),
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    child: Image.asset(
+                      categories[index].image,
+                      fit: BoxFit.cover,
+                      height: 60,
+                      width: 60,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  categories[index].name,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF3B3B3B),
+                    fontSize: 14,
+                  ),
+                )
+              ],
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 }
