@@ -50,6 +50,7 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'accessToken': accessToken,
+      'refreshToken': refreshToken,
       'password': password,
       'refreshToken': refreshToken,
       're_password': re_password,

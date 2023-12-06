@@ -134,6 +134,16 @@ void httpErrorHandle({
         context,
         'Tài khoản đã được sử dụng',
       );
+    case 403:
+      showSnackBarError(context, 'Tài khoản của bạn bị khóa!');
+    case 404:
+      showSnackBarError(
+        context,
+        'Tài khoản hoặc mật khẩu bị sai',
+      );
+      break;
+    case 422:
+      showSnackBarError(context, 'Tài khoản đã được sử dụng');
       break;
     case 429:
       showSnackBarError(
