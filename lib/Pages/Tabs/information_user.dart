@@ -48,6 +48,7 @@ class _InformationUserState extends State<InformationUser> {
     userNameController.text = user.userName;
     emailController.text = user.email;
     lastNameController.text = user.lastName;
+    avatarPublicId.text = user.avatar.publicId;
 
     return Scaffold(
       appBar: AppBar(

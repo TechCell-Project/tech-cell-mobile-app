@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/home_screen.dart';
 import 'package:my_app/Pages/Tabs/address_user.dart';
 import 'package:my_app/Pages/Tabs/change_password.dart';
@@ -27,7 +26,7 @@ final List<SettingModel> settings = [
   SettingModel(
     title: 'Địa chỉ',
     route: const AddressUser(),
-    icon: CupertinoIcons.heart_fill,
+    icon: CupertinoIcons.location,
   ),
 ];
 final List<SettingModel> settings2 = [

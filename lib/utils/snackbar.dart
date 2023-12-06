@@ -7,7 +7,7 @@ void showSnackBarError(BuildContext context, String text) {
     SnackBar(
       content: Container(
         padding: const EdgeInsets.all(8),
-        height: 500,
+        height: 100,
         decoration: const BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(

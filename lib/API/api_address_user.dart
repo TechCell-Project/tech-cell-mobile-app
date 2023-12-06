@@ -12,54 +12,74 @@ import 'package:provider/provider.dart';
 
 class Address {
   Future<void> pathAddress(
-      {required BuildContext context,
-      required String addressName,
-      required String customerName,
-      required String phoneNumbers,
-      required int provinceId,
-      required String provinceName,
-      required int districtId,
-      required String districtName,
-      required String wardCode,
-      required String wardName,
-      required String detail}) async {
+    BuildContext context,
+    AddressModel address,
+  ) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
-
+      List<AddressModel> allAddress = userProvider.user.address;
+      allAddress.add(address);
       http.Response res = await http.patch(
         Uri.parse('${uri}profile/address'),
-        body: {
-          "address": [
-            {
-              "addressName": addressName,
-              "customerName": customerName,
-              "phoneNumbers": phoneNumbers,
-              "provinceLevel": {
-                "province_id": provinceId,
-                "province_name": provinceName
-              },
-              "districtLevel": {
-                "district_id": districtId,
-                "district_name": districtName,
-              },
-              "wardLevel": {
-                "ward_code": wardCode,
-                "ward_name": wardName,
-              },
-              "detail": detail,
-            }
-          ].toString()
-        },
+        body: jsonEncode({
+          "address": allAddress,
+        }),
         headers: {
           'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      print(res.body);
       httpErrorHandle(
           response: res,
           context: context,
           onSuccess: () {
+            Navigator.pop(context);
+            showSnackBarSuccess(context, 'Thanh cong');
+          });
+    } catch (e) {
+      showSnackBarError(context, e.toString());
+    }
+  }
+
+  void updateAddress(
+      List<AddressModel> addresses, AddressModel addressModel, int index) {
+    if (index >= 0 && index < addresses.length) {
+      addresses[index] = AddressModel(
+        addressName: addressModel.addressName,
+        customerName: addressModel.customerName,
+        phoneNumbers: addressModel.phoneNumbers,
+        provinceLevel: addressModel.provinceLevel,
+        districtLevel: addressModel.districtLevel,
+        wardLevel: addressModel.wardLevel,
+        detail: addressModel.detail,
+        isDefault: addressModel.isDefault,
+      );
+    }
+  }
+
+  Future<void> changeAddress(
+    BuildContext context,
+    List<AddressModel> address,
+  ) async {
+    try {
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      String accessToken = userProvider.user.accessToken;
+      http.Response res = await http.patch(
+        Uri.parse('${uri}profile/address'),
+        body: jsonEncode({
+          "address": address,
+        }),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            Navigator.pop(context);
             showSnackBarSuccess(context, 'Thanh cong');
           });
     } catch (e) {

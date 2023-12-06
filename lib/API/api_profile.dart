@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_app/Pages/Tabs/address_user.dart';
-import 'package:my_app/Pages/Tabs/information_user.dart';
 import 'package:my_app/Providers/user_provider.dart';
 
 import 'package:my_app/utils/constant.dart';
@@ -38,10 +36,11 @@ class ProfileUser {
         context: context,
         onSuccess: () async {
           showSnackBarSuccess(context, 'Thay doi thanh cong');
+          getProfileUser(context);
         },
       );
     } catch (e) {
-      showSnackBarError(context, e.toString());
+      showSnackBarError(context, 'e.toString()');
     }
   }
 
@@ -89,39 +88,7 @@ class ProfileUser {
       httpErrorHandle(
         response: res,
         context: context,
-        onSuccess: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const InformationUser()),
-          );
-        },
-      );
-    } catch (e) {
-      showSnackBarError(context, e.toString());
-    }
-  }
-
-  Future<void> getAddressUser(BuildContext context) async {
-    try {
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
-      String accessToken = userProvider.user.accessToken;
-      http.Response res = await http.get(
-        Uri.parse(
-          '${uri}profile',
-        ),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddressUser()),
-          );
-        },
+        onSuccess: () async {},
       );
     } catch (e) {
       showSnackBarError(context, e.toString());

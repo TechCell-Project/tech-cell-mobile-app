@@ -57,10 +57,10 @@ class _UserProfileState extends State<UserProfile> {
                     children: [
                       const CircleAvatar(
                         backgroundImage: AssetImage('assets/icons/profile.png'),
-                        // backgroundImage: user.avatar.publicId.isEmpty
+                        // backgroundImage: user.avatar.url.isEmpty
                         //     ? const AssetImage('assets/icons/profile.png')
                         //     : NetworkImage(user.avatar.url) as ImageProvider,
-                        backgroundColor: primaryColors,
+                        // backgroundColor: primaryColors,
                       ),
                       const SizedBox(width: 10),
                       Column(

@@ -10,7 +10,7 @@ class AddressModel {
   final DistrictLevel districtLevel;
   final WardLevel wardLevel;
   final String detail;
-  bool? isDefault;
+  bool isDefault;
 
   AddressModel({
     required this.addressName,
@@ -20,7 +20,7 @@ class AddressModel {
     required this.districtLevel,
     required this.wardLevel,
     required this.detail,
-    this.isDefault,
+    required this.isDefault,
   });
 
   factory AddressModel.fromRawJson(String str) =>

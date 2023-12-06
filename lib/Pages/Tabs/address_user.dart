@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Tabs/add_address._tap.dart';
+import 'package:my_app/Pages/Tabs/change_address.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/models/address_model.dart';
 import 'package:my_app/utils/constant.dart';
@@ -20,7 +21,7 @@ class _AddressUserState extends State<AddressUser> {
   @override
   Widget build(BuildContext context) {
     List<AddressModel> addressUser =
-        Provider.of<UserProvider>(context).user.address;
+        Provider.of<UserProvider>(context, listen: false).user.address;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -34,6 +35,7 @@ class _AddressUserState extends State<AddressUser> {
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Padding(
             padding: EdgeInsets.all(10),
@@ -50,8 +52,18 @@ class _AddressUserState extends State<AddressUser> {
             shrinkWrap: true,
             itemCount: addressUser.length,
             itemBuilder: ((context, index) {
-              return InkWell(
-                onTap: () {},
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: ((context) => ChangeAddress(
+                            addressUser: addressUser[index],
+                            index: index,
+                          )),
+                    ),
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -60,6 +72,8 @@ class _AddressUserState extends State<AddressUser> {
                               color: Colors.grey.withOpacity(0.5), width: 1))),
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0, bottom: 5),
@@ -145,6 +159,29 @@ class _AddressUserState extends State<AddressUser> {
                           ],
                         ),
                       ),
+                      const SizedBox(height: 5),
+                      if (addressUser[index].isDefault == true)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 10,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: primaryColors),
+                            ),
+                            child: const Text(
+                              'Mặc định',
+                              style: TextStyle(
+                                color: primaryColors,
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        Container(),
                     ],
                   ),
                 ),
