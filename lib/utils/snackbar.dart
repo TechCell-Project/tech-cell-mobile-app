@@ -107,13 +107,32 @@ void httpErrorHandle({
     case 400:
       showSnackBarError(
         context,
-        'Your account email or password is invalid',
+        'Loi 400',
       );
       break;
     case 401:
       showSnackBarError(
         context,
         'Tài khoản hoặc mật khẩu sai',
+      );
+    case 403:
+      showSnackBarError(context, 'Tài khoản của bạn bị khóa!');
+    case 404:
+      showSnackBarError(
+        context,
+        'Tài khoản hoặc mật khẩu bị sai',
+      );
+      break;
+    case 406:
+      showSnackBarError(
+        context,
+        'Tài khoản của bạn chưa được xác thực',
+      );
+      break;
+    case 422:
+      showSnackBarError(
+        context,
+        'Tài khoản đã được sử dụng',
       );
     case 403:
       showSnackBarError(context, 'Tài khoản của bạn bị khóa!');
@@ -132,6 +151,8 @@ void httpErrorHandle({
         jsonDecode(response.body)['error'],
       );
       break;
+    case 502:
+      showSnackBarError(context, 'loi o day');
     default:
       showSnackBarError(context, response.body);
   }

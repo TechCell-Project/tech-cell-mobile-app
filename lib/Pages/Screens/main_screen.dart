@@ -8,7 +8,9 @@ import 'package:my_app/Pages/Screens/setting_screen.dart';
 import 'package:my_app/utils/constant.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({
+    super.key,
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();

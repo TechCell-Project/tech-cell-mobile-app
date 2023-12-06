@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
+
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/SettingScreen/setting_title.dart';
 import 'package:my_app/models/setting.dart';
@@ -18,6 +19,15 @@ class _UserProfileState extends State<UserProfile> {
     AuthLogin().signOut(context);
   }
 
+  // final ProfileUser proflieUser = ProfileUser();
+  // // void getProfile() {
+  // //   proflieUser.getProfileUser(context);
+  // // }
+
+  // void getAddressUser() {
+  //   proflieUser.getAddressUser(context);
+  // }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -31,13 +41,26 @@ class _UserProfileState extends State<UserProfile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, 4),
+                        blurRadius: 10,
+                        color: primaryColors.withOpacity(0.3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
-                      Image.asset(
-                        'assets/icons/profile.png',
-                        width: 50,
-                        color: Colors.grey.withOpacity(0.4),
+                      const CircleAvatar(
+                        backgroundImage: AssetImage('assets/icons/profile.png'),
+                        // backgroundImage: user.avatar.url.isEmpty
+                        //     ? const AssetImage('assets/icons/profile.png')
+                        //     : NetworkImage(user.avatar.url) as ImageProvider,
+                        // backgroundColor: primaryColors,
                       ),
                       const SizedBox(width: 10),
                       Column(
@@ -103,7 +126,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   child: const Text(
-                    'Đăng xuat',
+                    'Đăng Xuất',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),

@@ -3,17 +3,21 @@ import 'package:my_app/models/user_models.dart';
 
 class UserProvider extends ChangeNotifier {
   User _user = User(
-      id: '',
-      email: '',
-      userName: '',
-      firstName: '',
-      lastName: '',
-      password: '',
-      re_password: '',
-      accessToken: '',
-      refreshToken: '');
+    id: '',
+    email: '',
+    userName: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    re_password: '',
+    accessToken: '',
+    refreshToken: '',
+    avatar: ImageModel(publicId: '', url: ''),
+    address: [],
+  );
   User get user => _user;
-  void setUser(String user) {
+
+  void setUser(dynamic user) {
     _user = User.fromJson(user);
     notifyListeners();
   }

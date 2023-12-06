@@ -14,8 +14,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final AuthLogin authLogin = AuthLogin();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
