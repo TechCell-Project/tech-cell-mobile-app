@@ -33,9 +33,6 @@ class _SwitchDefaulAddressState extends State<SwitchDefaulAddress> {
       activeColor: Colors.red,
       onChanged: (bool value) {
         _toggleDefaultAddress(widget.index);
-        if (value == true) {
-          deactivate();
-        }
         setState(() {
           widget.light = value;
         });

@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class TextformAddress extends StatelessWidget {
   TextEditingController controller;
   String hint;
+  TextInputType? keyboard;
   String? Function(String?)? validate;
   TextformAddress({
     Key? key,
     required this.controller,
     required this.hint,
     required this.validate,
+    this.keyboard,
   }) : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class TextformAddress extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 10.0, top: 5),
         child: TextFormField(
+          keyboardType: keyboard,
           controller: controller,
           validator: validate,
           decoration: InputDecoration(

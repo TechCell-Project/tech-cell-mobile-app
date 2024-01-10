@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
 import 'package:my_app/Pages/Tabs/user_profile.dart';
-import 'package:my_app/Providers/user_provider.dart';
-
-import 'package:provider/provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -17,9 +14,16 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Provider.of<UserProvider>(context).user.accessToken.isEmpty
-          ? const LoginTap()
-          : const UserProfile(),
+      body: FutureBuilder<String?>(
+        future: AuthLogin.getAccessToken(),
+        builder: (context, snapshoot) {
+          if (snapshoot.data == null) {
+            return const LoginTap();
+          } else {
+            return const UserProfile();
+          }
+        },
+      ),
     );
   }
 }

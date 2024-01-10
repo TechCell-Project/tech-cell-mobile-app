@@ -154,6 +154,7 @@ class _SignUpTapState extends State<SignUpTap> {
                         ),
                       ),
                       const SizedBox(height: 50),
+                      // ButtonSendrequest(text: 'Đăng ký', submit: )
                       ElevatedButton(
                         onPressed: signUpUser,
                         style: ElevatedButton.styleFrom(

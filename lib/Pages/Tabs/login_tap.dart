@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Pages/Tabs/forgot_tap.dart';
 import 'package:my_app/Pages/Tabs/sigup_tap.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/Widgets/Login/button_login.dart';
-import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/validator.dart';
 
 class LoginTap extends StatefulWidget {
@@ -111,20 +111,7 @@ class _LoginTapState extends State<LoginTap> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: loginUser,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(55),
-                          backgroundColor: primaryColors,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: const Text(
-                          'Đăng nhập',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
+                      ButtonSendrequest(text: 'Đăng nhập', submit: loginUser),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -171,11 +158,6 @@ class _LoginTapState extends State<LoginTap> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      ButtonLogin(
-                        loginWith: () {},
-                        image: 'assets/icons/facebook.png',
-                        text: 'Đăng nhập bằng FaceBook',
-                      ),
                       const SizedBox(height: 20),
                       ButtonLogin(
                         loginWith: signinGoogle,

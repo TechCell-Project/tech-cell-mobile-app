@@ -9,9 +9,18 @@ class ImageModel {
   String url;
 
   ImageModel({required this.publicId, required this.url});
+  Map<String, dynamic> toJson() {
+    return {
+      'publicId': publicId,
+      'url': url,
+    };
+  }
 
   factory ImageModel.fromMap(Map<String, dynamic> map) {
-    return ImageModel(publicId: map['publicId'] ?? "", url: map['url'] ?? '');
+    return ImageModel(
+      publicId: map['publicId'] ?? "",
+      url: map['url'] ?? '',
+    );
   }
 }
 
@@ -52,6 +61,7 @@ class User {
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'password': password,
+      // ignore: equal_keys_in_map
       'refreshToken': refreshToken,
       're_password': re_password,
       'avatar': avatar,
@@ -73,8 +83,16 @@ class User {
       avatar: map['avatar'] != null
           ? ImageModel.fromMap(map['avatar'])
           : ImageModel(publicId: 'publicId', url: 'url'),
-      address: List<AddressModel>.from(
-          map["address"].map((x) => AddressModel.fromJson(x))),
+      address: map["address"] != null
+          ? List<AddressModel>.from(
+              (map["address"] as List?)
+                      ?.where((x) => x != null)
+                      .map((x) =>
+                          AddressModel.fromJson(x as Map<String, dynamic>))
+                      .toList() ??
+                  [],
+            )
+          : [],
     );
   }
 
