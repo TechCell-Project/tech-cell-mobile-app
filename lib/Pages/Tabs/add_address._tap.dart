@@ -97,6 +97,7 @@ class _AddAddressTapState extends State<AddAddressTap> {
                 validate: (value) => Validator.validateText(value ?? ''),
               ),
               TextformAddress(
+                keyboard: TextInputType.phone,
                 controller: phoneNumberController,
                 hint: 'Số điện thoại',
                 validate: (value) => Validator.validatePhoneNumber(value ?? ''),
@@ -130,6 +131,8 @@ class _AddAddressTapState extends State<AddAddressTap> {
                           setState(() {
                             selectedProvince = newValue;
                             isProvinceSelected = true;
+                            selecttedDistricts = null;
+                            selectedWards = null;
                             address
                                 .getDistricts(context, newValue!.province_id)
                                 .then((data) {
@@ -171,6 +174,7 @@ class _AddAddressTapState extends State<AddAddressTap> {
                           setState(() {
                             selecttedDistricts = newValue;
                             isDistrictSelected = true;
+                            selectedWards = null;
                             address
                                 .getWards(context, newValue!.district_id)
                                 .then((value) {

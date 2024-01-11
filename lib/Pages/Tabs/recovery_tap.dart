@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_veryfi.dart';
-import 'package:my_app/utils/constant.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 
 // ignore: must_be_immutable
 class RecoveryTap extends StatelessWidget {
@@ -44,7 +44,7 @@ class RecoveryTap extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const Text(
-                'Thay doi Mat khau ',
+                'Thay đổi mật khẩu ',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class RecoveryTap extends StatelessWidget {
                 controller: otpController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: "Ma OTP",
+                  labelText: "Mã OTP",
                   prefixIcon: Icon(Icons.numbers),
                 ),
               ),
@@ -65,7 +65,7 @@ class RecoveryTap extends StatelessWidget {
                 controller: passwrordController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: "Mat khau Moi",
+                  labelText: "Mật Khẩu Mới",
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -87,7 +87,7 @@ class RecoveryTap extends StatelessWidget {
                 controller: re_passwordController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: "Nhap lai Mat khau",
+                  labelText: "Nhập lại mật khẩu",
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -104,20 +104,7 @@ class RecoveryTap extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: changePassword,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(55),
-                  backgroundColor: primaryColors,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text(
-                  'Gui Ma OTP',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+              ButtonSendrequest(text: 'Gửi mã OTP', submit: changePassword)
             ],
           ),
         ),

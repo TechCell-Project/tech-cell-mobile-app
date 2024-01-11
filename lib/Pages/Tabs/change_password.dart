@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_profile.dart';
-import 'package:my_app/utils/constant.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/utils/validator.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -140,20 +140,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                     ),
                   )),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: changeUserPassword,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(55),
-                  backgroundColor: primaryColors,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text(
-                  'Đổi mật khẩu',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+              ButtonSendrequest(text: 'Đổi mật khẩu', submit: changeUserPassword),
+              
             ],
           ),
         ),

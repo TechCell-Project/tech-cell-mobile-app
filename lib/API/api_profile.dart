@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Providers/user_provider.dart';
 
 import 'package:my_app/utils/constant.dart';
@@ -11,10 +12,8 @@ import 'package:provider/provider.dart';
 class ProfileUser {
   Future<void> changeProfile({
     required BuildContext context,
-    required String firstName,
-    required String lastName,
-    required String userName,
-    required String avatarPublicId,
+    required String changeInfo,
+    required String body,
   }) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -22,10 +21,7 @@ class ProfileUser {
       http.Response response = await http.patch(
         Uri.parse('${uri}profile/info'),
         body: {
-          'userName': userName,
-          'firstName': firstName,
-          'lastName': lastName,
-          'avatarPublicId': avatarPublicId,
+          body: changeInfo,
         },
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -36,7 +32,6 @@ class ProfileUser {
         context: context,
         onSuccess: () async {
           showSnackBarSuccess(context, 'Thay doi thanh cong');
-          getProfileUser(context);
         },
       );
     } catch (e) {
@@ -52,6 +47,11 @@ class ProfileUser {
   }) async {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     String accessToken = userProvider.user.accessToken;
+    if (accessToken.isEmpty) {
+      final newAccessToken = await AuthLogin.getAccessToken();
+      accessToken = newAccessToken!;
+    }
+
     http.Response res = await http.post(
       Uri.parse('${uri}auth/change-password'),
       body: {
@@ -63,11 +63,13 @@ class ProfileUser {
         'Authorization': 'Bearer $accessToken',
       },
     );
+
     httpErrorHandle(
       response: res,
       context: context,
       onSuccess: () {
         showSnackBarSuccess(context, 'Thay doi thanh cong');
+        Navigator.pop(context);
       },
     );
   }

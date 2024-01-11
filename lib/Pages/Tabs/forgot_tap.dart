@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_veryfi.dart';
-import 'package:my_app/utils/constant.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 
 class ForgotTap extends StatefulWidget {
   const ForgotTap({super.key});
@@ -38,7 +38,7 @@ class _ForgotTapState extends State<ForgotTap> {
             children: [
               const SizedBox(height: 20),
               const Text(
-                'Quen Mat Khau',
+                'Quên Mật khẩu',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class _ForgotTapState extends State<ForgotTap> {
               ),
               const SizedBox(height: 50),
               const Text(
-                'Nhap dia chi email de nhan ma OTP',
+                'Nhập địa chỉ email để nhận mã OTP',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -76,20 +76,7 @@ class _ForgotTapState extends State<ForgotTap> {
                 ),
               ),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: sentOTP,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(55),
-                  backgroundColor: primaryColors,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text(
-                  'Gui Ma OTP',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+              ButtonSendrequest(text: 'Gửi Mã OTP', submit: sentOTP)
             ],
           ),
         ),

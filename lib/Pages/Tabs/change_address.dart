@@ -83,6 +83,43 @@ class _ChangeAddressState extends State<ChangeAddress> {
     address.getProvinces(context).then((data) {
       setState(() {
         provinceLevel = data;
+        selectedProvince = data.isNotEmpty
+            ? data.firstWhere(
+                (province) =>
+                    province.province_id ==
+                    widget.addressUser.provinceLevel.province_id,
+              )
+            : null;
+        if (selectedProvince != null) {
+          address
+              .getDistricts(context, selectedProvince!.province_id)
+              .then((value) {
+            setState(() {
+              districtsLevel = value;
+              selecttedDistricts = value.isNotEmpty
+                  ? value.firstWhere(
+                      (district) =>
+                          district.district_id ==
+                          widget.addressUser.districtLevel.district_id,
+                    )
+                  : null;
+              if (selecttedDistricts != null) {
+                address
+                    .getWards(context, selecttedDistricts!.district_id)
+                    .then((value) {
+                  setState(() {
+                    wardLevel = value;
+                    selectedWards = value.isNotEmpty
+                        ? value.firstWhere((ward) =>
+                            ward.wardCode ==
+                            widget.addressUser.wardLevel.wardCode)
+                        : null;
+                  });
+                });
+              }
+            });
+          });
+        }
       });
     });
   }
@@ -191,12 +228,13 @@ class _ChangeAddressState extends State<ChangeAddress> {
                       const Text('Chọn thành phố: '),
                       const Spacer(),
                       DropdownButton<ProvinceLevel>(
-                        hint: Text(
-                            widget.addressUser.provinceLevel.province_name),
+                        hint: const Text(''),
                         value: selectedProvince,
                         onChanged: (newValue) {
                           setState(() {
                             selectedProvince = newValue;
+                            selecttedDistricts = null;
+                            selectedWards = null;
                             address
                                 .getDistricts(context, newValue!.province_id)
                                 .then((data) {
@@ -231,13 +269,12 @@ class _ChangeAddressState extends State<ChangeAddress> {
                     const Text('Chọn Quận/Huyện: '),
                     const Spacer(),
                     DropdownButton<DistrictLevel>(
-                      hint:
-                          Text(widget.addressUser.districtLevel.district_name),
+                      hint: const Text(''),
                       value: selecttedDistricts,
                       onChanged: (DistrictLevel? newValue) {
                         setState(() {
                           selecttedDistricts = newValue;
-
+                          selectedWards = null;
                           address
                               .getWards(context, newValue!.district_id)
                               .then((value) {
@@ -271,7 +308,7 @@ class _ChangeAddressState extends State<ChangeAddress> {
                     const Text('Chọn Xã/Phường: '),
                     const Spacer(),
                     DropdownButton<WardLevel>(
-                      hint: Text(widget.addressUser.wardLevel.wardName),
+                      hint: const Text(''),
                       value: selectedWards,
                       onChanged: (newValue) {
                         setState(() {

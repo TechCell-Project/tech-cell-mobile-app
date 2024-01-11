@@ -19,18 +19,9 @@ class _UserProfileState extends State<UserProfile> {
     AuthLogin().signOut(context);
   }
 
-  // final ProfileUser proflieUser = ProfileUser();
-  // // void getProfile() {
-  // //   proflieUser.getProfileUser(context);
-  // // }
-
-  // void getAddressUser() {
-  //   proflieUser.getAddressUser(context);
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = Provider.of<UserProvider>(context, listen: false).user;
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -55,12 +46,12 @@ class _UserProfileState extends State<UserProfile> {
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        backgroundImage: AssetImage('assets/icons/profile.png'),
-                        // backgroundImage: user.avatar.url.isEmpty
-                        //     ? const AssetImage('assets/icons/profile.png')
-                        //     : NetworkImage(user.avatar.url) as ImageProvider,
-                        // backgroundColor: primaryColors,
+                      CircleAvatar(
+                        // backgroundImage: AssetImage('assets/icons/profile.png'),
+                        backgroundImage: user.avatar.url.isEmpty
+                            ? const AssetImage('assets/icons/profile.png')
+                            : NetworkImage(user.avatar.url) as ImageProvider,
+                        backgroundColor: primaryColors,
                       ),
                       const SizedBox(width: 10),
                       Column(
