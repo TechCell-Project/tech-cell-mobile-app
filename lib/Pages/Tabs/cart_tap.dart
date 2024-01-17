@@ -1,19 +1,11 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_app/API/api_cart.dart';
 import 'package:my_app/API/api_product.dart';
-import 'package:my_app/Pages/Tabs/add_address._tap.dart';
-import 'package:my_app/Pages/Tabs/change_address.dart';
-import 'package:my_app/Pages/Tabs/confirm_order.dart';
 import 'package:my_app/Providers/product_provider.dart';
-import 'package:my_app/Providers/user_provider.dart';
-import 'package:my_app/Widgets/Login/button.dart';
-import 'package:my_app/models/address_model.dart';
 import 'package:my_app/models/product_model.dart';
-import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
 class CartTap extends StatefulWidget {
