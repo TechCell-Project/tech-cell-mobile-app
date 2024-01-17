@@ -1,11 +1,14 @@
-import 'dart:io';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_image.dart';
 import 'package:my_app/API/api_profile.dart';
 import 'package:my_app/Providers/user_provider.dart';
+import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
+import 'package:my_app/utils/snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,27 +25,14 @@ class _InformationUserState extends State<InformationUser> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController avatarPublicId = TextEditingController();
-  final ProfileUser user = ProfileUser();
+  final ProfileUser userClass = ProfileUser();
   final Avatar avatar = Avatar();
   File? _selectedImage;
-
-  void getUserProfile() {
-    user.getProfileUser(context);
-  }
-
-  void changeProfile() {
-    user.changeProfile(
-      firstName: fisrtNameController.text,
-      lastName: lastNameController.text,
-      userName: userNameController.text,
-      avatarPublicId: avatarPublicId.text,
-      context: context,
-    );
-  }
+  bool checkavatar = true;
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = Provider.of<UserProvider>(context, listen: false).user;
 
     fisrtNameController.text = user.firstName;
     userNameController.text = user.userName;
@@ -63,15 +53,12 @@ class _InformationUserState extends State<InformationUser> {
         ),
       ),
       body: Container(
+        decoration:
+            const BoxDecoration(color: Color.fromARGB(255, 245, 245, 245)),
         padding: const EdgeInsets.only(
-          left: 15,
           top: 20,
-          right: 15,
         ),
         child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
           child: Column(
             children: [
               Center(
@@ -94,11 +81,10 @@ class _InformationUserState extends State<InformationUser> {
                         ],
                         shape: BoxShape.circle,
                       ),
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/icons/profile.png'),
-                        // backgroundImage: _selectedImage != null
-                        //     ? FileImage(_selectedImage!)
-                        //     : NetworkImage(user.avatar.url) as ImageProvider,
+                      child: CircleAvatar(
+                        backgroundImage: _selectedImage != null
+                            ? FileImage(_selectedImage!)
+                            : NetworkImage(user.avatar.url) as ImageProvider,
                         backgroundColor: Colors.white,
                       ),
                     ),
@@ -132,24 +118,27 @@ class _InformationUserState extends State<InformationUser> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
-              buildTextField("Tên", fisrtNameController),
-              buildTextField("Họ", lastNameController),
-              buildTextField('Tên tài khoản', userNameController),
-              ElevatedButton(
-                onPressed: changeProfile,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(55),
-                  backgroundColor: primaryColors,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              if (checkavatar)
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                ),
-                child: const Text(
-                  'Cập nhật thông tin',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+                  child: TextButton(
+                    onPressed: () {
+                      updateAvatar(context);
+                    },
+                    child: const Text('thay avatar'),
+                  ),
+                )
+              else
+                Container(),
+              const SizedBox(height: 30),
+              buildTextField("Họ", user.lastName, 'Thay ten', 'lastName',
+                  lastNameController),
+              buildTextField("Tên", user.firstName, 'Thay ho', 'firstName',
+                  fisrtNameController),
+              buildTextField('Tên tài khoản', user.userName,
+                  'Thay ten tai khoan', 'userName', userNameController),
             ],
           ),
         ),
@@ -157,30 +146,27 @@ class _InformationUserState extends State<InformationUser> {
     );
   }
 
-  Future pickImageFromGallery() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-    });
-  }
-
-  Future uploadAvatar(FormData image) async {
-    final response = await avatar.postImage(context: context, image: image);
-    return response;
+  Future pickImageFromGallery(BuildContext context) async {
+    final picker = ImagePicker();
+    final returnedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) {
+      return;
+    } else {
+      setState(() {
+        _selectedImage = File(returnedImage.path);
+      });
+    }
   }
 
   Future pickImageFromCamera() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.camera);
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-    });
-    if (_selectedImage is bool) {
-      // final formData = FormData();
-      return uploadAvatar(_selectedImage as FormData);
+    if (returnedImage == null) {
+      return;
+    } else {
+      setState(() {
+        _selectedImage = File(returnedImage.path);
+      });
     }
   }
 
@@ -206,7 +192,7 @@ class _InformationUserState extends State<InformationUser> {
                   icon: const Icon(Icons.camera)),
               IconButton(
                   onPressed: () {
-                    pickImageFromGallery();
+                    pickImageFromGallery(context);
                   },
                   icon: const Icon(Icons.image)),
             ],
@@ -216,27 +202,104 @@ class _InformationUserState extends State<InformationUser> {
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 5),
-          labelText: label,
-          labelStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 89, 89, 89),
+  Widget buildTextField(String label, String info, String title, String body,
+      TextEditingController changeInfo) {
+    return InkWell(
+      onTap: () {
+        openDialog(
+          title,
+          body,
+          changeInfo,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 89, 89, 89),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  info,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 89, 89, 89),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Icon(
+                  CupertinoIcons.right_chevron,
+                  size: 16,
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future openDialog(
+          String title, String body, TextEditingController changeInfo) =>
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: TextField(
+            controller: changeInfo,
+            decoration: const InputDecoration(hintText: 'nhap vao day'),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                submit(
+                  changeInfo,
+                  body,
+                );
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      );
+  Future submit(TextEditingController changeInfo, String body) async {
+    userClass.changeProfile(
+      context: context,
+      body: body,
+      changeInfo: changeInfo.text,
+    );
+    Navigator.pop(context);
+  }
+
+  Future updateAvatar(BuildContext context) async {
+    ImageModel? newAvatar = await Avatar().postImage(
+      context: context,
+      image: _selectedImage,
+    );
+    if (newAvatar != null) {
+      userClass.changeProfile(
+        context: context,
+        body: 'avatarPublicId',
+        changeInfo: newAvatar.publicId,
+      );
+      checkavatar = false;
+    } else {
+      showSnackBarError(context, 'loi roi');
+    }
   }
 }

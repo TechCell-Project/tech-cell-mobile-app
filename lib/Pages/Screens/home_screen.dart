@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Widgets/HomeScreen/banner_slider.dart';
-import 'package:my_app/Widgets/HomeScreen/header.dart';
 import 'package:my_app/Widgets/HomeScreen/category.dart';
+import 'package:my_app/Widgets/HomeScreen/header_home.dart';
 import 'package:my_app/Widgets/HomeScreen/prodcut_card.dart';
-import 'package:my_app/Widgets/HomeScreen/products_hot_sale.dart';
+import 'package:my_app/Widgets/HomeScreen/product_hot_sale.dart';
 import 'package:my_app/Widgets/HomeScreen/title_with_more_btn.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Header(_scrollController),
+          HeaderHome(_scrollController),
         ],
       ),
     );

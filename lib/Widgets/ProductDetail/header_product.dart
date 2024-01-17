@@ -3,17 +3,17 @@ import 'package:my_app/Pages/Screens/cart_screen.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 
-class Header extends StatefulWidget {
+class HeaderProductDetail extends StatefulWidget {
+  HeaderProductDetail(this.scrollController);
   final TrackingScrollController scrollController;
-  Header(this.scrollController);
 
   @override
   _HeaderState createState() => _HeaderState();
 }
 
-class _HeaderState extends State<Header> {
+class _HeaderState extends State<HeaderProductDetail> {
   late Color _backgroundColor;
-  late Color _backgroundColorSearch;
+
   late Color _colorIcon;
   late double _opacity;
   late double _offset;
@@ -22,8 +22,8 @@ class _HeaderState extends State<Header> {
 
   @override
   void initState() {
-    _backgroundColor = primaryColors.withOpacity(0.1);
-    _backgroundColorSearch = Colors.white;
+    _backgroundColor = Colors.transparent;
+
     _colorIcon = Colors.white;
     _opacity = 0.0;
     _offset = 0.0;
@@ -41,12 +41,12 @@ class _HeaderState extends State<Header> {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _buildSearch(),
+                    _buildIconback(),
                     SizedBox(width: 15),
                     _buildCartButton(),
                   ],
@@ -56,27 +56,24 @@ class _HeaderState extends State<Header> {
           );
   }
 
-  _buildSearch() {
-    final border = OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.transparent, width: 0),
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-    );
-
-    final sizeIcon = BoxConstraints(minWidth: 40, minHeight: 40);
-
-    return Expanded(
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(4),
-          focusedBorder: border,
-          enabledBorder: border,
-          isDense: true,
-          hintText: "Tìm kiếm...",
-          hintStyle: TextStyle(fontSize: 18, color: primaryColors),
-          prefixIcon: Icon(Icons.search),
-          prefixIconConstraints: sizeIcon,
-          filled: true,
-          fillColor: _backgroundColorSearch,
+  _buildIconback() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Colors.white),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(0),
+        child: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 28,
+          ),
         ),
       ),
     );
@@ -84,14 +81,22 @@ class _HeaderState extends State<Header> {
 
   _buildCartButton() {
     return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Colors.white),
+      ),
       child: InkWell(
         onTap: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => CartScreen()));
         },
-        child: badges.Badge(
-          badgeContent: Text('0', style: TextStyle(color: Colors.white)),
-          child: Icon(Icons.shopping_cart, color: _colorIcon, size: 35),
+        child: Padding(
+          padding: EdgeInsets.all(11),
+          child: badges.Badge(
+            badgeContent: Text('0', style: TextStyle(color: Colors.white)),
+            child: Icon(Icons.shopping_cart, color: _colorIcon, size: 28),
+          ),
         ),
       ),
     );
@@ -114,16 +119,14 @@ class _HeaderState extends State<Header> {
 
     setState(() {
       if (scrollOffset <= 0) {
-        _backgroundColorSearch = Colors.white;
         _colorIcon = Colors.white;
         _offset = 0.0;
         _opacity = 0.0;
       } else {
-        _backgroundColorSearch = Colors.grey.shade200;
         _colorIcon = primaryColors;
       }
 
-      _backgroundColor = primaryColors.withOpacity(0.1);
+      _backgroundColor = Colors.transparent;
     });
   }
 }

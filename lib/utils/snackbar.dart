@@ -7,7 +7,7 @@ void showSnackBarError(BuildContext context, String text) {
     SnackBar(
       content: Container(
         padding: const EdgeInsets.all(8),
-        height: 500,
+        height: 100,
         decoration: const BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.all(
@@ -72,7 +72,7 @@ void showSnackBarSuccess(BuildContext context, String text) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Thanh cong',
+                    'Thành công',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,

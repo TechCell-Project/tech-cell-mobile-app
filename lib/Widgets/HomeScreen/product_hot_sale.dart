@@ -9,14 +9,14 @@ import 'package:my_app/models/product_model.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class ProductCart extends StatefulWidget {
-  const ProductCart({super.key});
+class ProductHotSale extends StatefulWidget {
+  const ProductHotSale({super.key});
 
   @override
-  State<ProductCart> createState() => _ProductCartState();
+  State<ProductHotSale> createState() => _ProductHotSaleState();
 }
 
-class _ProductCartState extends State<ProductCart> {
+class _ProductHotSaleState extends State<ProductHotSale> {
   @override
   void initState() {
     super.initState();
@@ -29,20 +29,20 @@ class _ProductCartState extends State<ProductCart> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(244, 244, 244, 1),
-        ),
+        height: 380,
+        decoration: BoxDecoration(color: Color.fromRGBO(244, 244, 244, 1)),
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: FutureBuilder<List<ProductModel>>(
             future: ProductAPI().getAllProducts(),
             builder: (context, snapshot) {
-              if ((snapshot.hasError) || (!snapshot.hasData))
+              if ((snapshot.hasError) || (!snapshot.hasData)) {
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
+              }
 
               if (snapshot.data == null) {
                 return Center(
@@ -57,24 +57,19 @@ class _ProductCartState extends State<ProductCart> {
               }
 
               return Consumer<ProductProvider>(
-                  builder: (context, value, child) {
-                final products = value.products;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 0,
-                    mainAxisExtent: 350,
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return ProductItemCart(product: product);
-                  },
-                );
-              });
+                builder: (context, value, child) {
+                  final products = value.products;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return ProductItem(product: product);
+                    },
+                  );
+                },
+              );
             },
           ),
         ),
@@ -83,11 +78,11 @@ class _ProductCartState extends State<ProductCart> {
   }
 }
 
-class ProductItemCart extends StatelessWidget {
-  ProductItemCart({required this.product});
+class ProductItem extends StatelessWidget {
   ProductModel product;
+  ProductItem({required this.product});
 
-  // bool isThumbnail = false;
+  bool isThumbnail = false;
 
   final formatCurrency =
       new NumberFormat.currency(locale: 'id', decimalDigits: 0, name: 'đ');
@@ -95,8 +90,10 @@ class ProductItemCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 230,
       child: GestureDetector(
         onTap: () {
+          // FocusScope.of(context).requestFocus(FocusNode());
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -111,7 +108,7 @@ class ProductItemCart extends StatelessWidget {
             color: Colors.white,
           ),
           child: Padding(
-            padding: EdgeInsets.all(4),
+            padding: EdgeInsets.all(15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -120,18 +117,30 @@ class ProductItemCart extends StatelessWidget {
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     itemCount: product.generalImages.length,
-                    itemBuilder: (context, position) {
-                      final generalImages = product.generalImages[position];
-                      if (generalImages.isThumbnail == true) {
-                        return Image(
-                          image: NetworkImage(
-                            '${generalImages.url}',
+                    itemBuilder: (context, index) {
+                      var image;
+                      try {
+                        final generalImage = product.generalImages[index];
+                        if (generalImage.isThumbnail == true) {
+                          return image = Image(
+                            image: NetworkImage('${generalImage.url}'),
+                            height: 200,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                      } catch (e) {
+                        image = Container(
+                          margin: EdgeInsets.only(top: 15),
+                          child: Image.asset(
+                            "assets/images/no_image.jpg",
+                            fit: BoxFit.cover,
                           ),
-                          height: 200,
-                          fit: BoxFit.cover,
                         );
                       }
-                      return SizedBox();
+
+                      return Container(
+                        child: image,
+                      );
                     },
                   ),
                 ),
@@ -165,7 +174,7 @@ class ProductItemCart extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 SizedBox(height: 8),
@@ -193,10 +202,10 @@ class ProductItemCart extends StatelessWidget {
                                 Text(
                                   '${formatCurrency.format(variation.price.base)}',
                                   style: TextStyle(
-                                    color: Colors.grey.withOpacity(0.5),
+                                    color: Colors.grey.withOpacity(0.7),
                                     fontWeight: FontWeight.w400,
                                     decoration: TextDecoration.lineThrough,
-                                    fontSize: 13,
+                                    fontSize: 15,
                                   ),
                                 ),
                                 SizedBox(height: 8),

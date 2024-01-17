@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_address_user.dart';
+import 'package:my_app/Widgets/Address/button_in_address.dart';
+import 'package:my_app/Widgets/Address/textform_address.dart';
 import 'package:my_app/models/address_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/validator.dart';
@@ -34,17 +36,23 @@ class _AddAddressTapState extends State<AddAddressTap> {
   void addAddress() {
     if (_formKey.currentState!.validate()) {
       address.pathAddress(
-        context: context,
-        customerName: fullNameController.text,
-        phoneNumbers: phoneNumberController.text,
-        provinceId: selectedProvince!.province_id,
-        provinceName: selectedProvince!.province_name,
-        districtId: selecttedDistricts!.district_id,
-        districtName: selecttedDistricts!.district_name,
-        wardCode: selectedWards!.wardCode,
-        wardName: selectedWards!.wardName,
-        detail: detailController.text,
-        addressName: addressNameController.text,
+        context,
+        AddressModel(
+          addressName: detailController.text,
+          customerName: fullNameController.text,
+          phoneNumbers: phoneNumberController.text,
+          provinceLevel: ProvinceLevel(
+              province_id: selectedProvince!.province_id,
+              province_name: selectedProvince!.province_name),
+          districtLevel: DistrictLevel(
+              district_id: selecttedDistricts!.district_id,
+              district_name: selecttedDistricts!.district_name),
+          wardLevel: WardLevel(
+              wardCode: selectedWards!.wardCode,
+              wardName: selectedWards!.wardName),
+          detail: detailController.text,
+          isDefault: false,
+        ),
       );
     }
   }
@@ -84,46 +92,16 @@ class _AddAddressTapState extends State<AddAddressTap> {
                   style: TextStyle(color: Color.fromARGB(255, 114, 114, 114)),
                 ),
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey, width: 0.4),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 5),
-                  child: TextFormField(
-                    controller: fullNameController,
-                    validator: (value) => Validator.validateText(value ?? ''),
-                    decoration: InputDecoration(
-                      hintText: 'Họ và tên',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
+              TextformAddress(
+                controller: fullNameController,
+                hint: 'Họ và tên',
+                validate: (value) => Validator.validateText(value ?? ''),
               ),
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 5),
-                  child: TextFormField(
-                    controller: phoneNumberController,
-                    validator: (value) =>
-                        Validator.validatePhoneNumber(value ?? ''),
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      hintText: 'Số điện thoại',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
+              TextformAddress(
+                keyboard: TextInputType.phone,
+                controller: phoneNumberController,
+                hint: 'Số điện thoại',
+                validate: (value) => Validator.validatePhoneNumber(value ?? ''),
               ),
               const SizedBox(height: 20),
               const Padding(
@@ -154,6 +132,8 @@ class _AddAddressTapState extends State<AddAddressTap> {
                           setState(() {
                             selectedProvince = newValue;
                             isProvinceSelected = true;
+                            selecttedDistricts = null;
+                            selectedWards = null;
                             address
                                 .getDistricts(context, newValue!.province_id)
                                 .then((data) {
@@ -195,6 +175,7 @@ class _AddAddressTapState extends State<AddAddressTap> {
                           setState(() {
                             selecttedDistricts = newValue;
                             isDistrictSelected = true;
+                            selectedWards = null;
                             address
                                 .getWards(context, newValue!.district_id)
                                 .then((value) {
@@ -250,22 +231,10 @@ class _AddAddressTapState extends State<AddAddressTap> {
                 )
               else
                 Container(),
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 5),
-                  child: TextFormField(
-                    controller: detailController,
-                    validator: (value) => Validator.validateText(value ?? ''),
-                    decoration: InputDecoration(
-                      hintText: 'Tên đường, Tòa nhà, Số Nhà',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
+              TextformAddress(
+                validate: (value) => Validator.validateText(value ?? ''),
+                hint: 'Tên đường, Tòa nhà, Số Nhà',
+                controller: detailController,
               ),
               const SizedBox(height: 20),
               const Padding(
@@ -275,43 +244,16 @@ class _AddAddressTapState extends State<AddAddressTap> {
                   style: TextStyle(color: Color.fromARGB(255, 114, 114, 114)),
                 ),
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey, width: 0.4),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 5),
-                  child: TextFormField(
-                    controller: addressNameController,
-                    validator: (value) => Validator.validateText(value ?? ''),
-                    decoration: InputDecoration(
-                      hintText: 'Loại địa chỉ: Nhà, Công ty',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
+              TextformAddress(
+                controller: addressNameController,
+                hint: 'Loại địa chỉ: Nhà, Công ty',
+                validate: (value) => Validator.validateText(value ?? ''),
               ),
               const SizedBox(height: 50),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: ElevatedButton(
-                  onPressed: addAddress,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(55),
-                    backgroundColor: primaryColors,
-                  ),
-                  child: const Text(
-                    'Hoàn Thành',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
+              ButtonInAddress(
+                functionAddress: addAddress,
+                textInAddress: 'Thêm địa chỉ',
+              )
             ],
           ),
         ),
