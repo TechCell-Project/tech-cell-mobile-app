@@ -42,7 +42,7 @@ class AuthLogin {
           userProvider.setUser(res.body);
           await TokenManager.setAccessToken(
               json.decode(res.body)['accessToken']);
-          await TokenManager.setAccessToken(
+          await TokenManager.setRefreshToken(
               json.decode(res.body)['refreshToken']);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const MainScreen()),

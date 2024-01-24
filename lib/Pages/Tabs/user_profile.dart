@@ -4,6 +4,7 @@ import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/SettingScreen/setting_title.dart';
 import 'package:my_app/models/setting.dart';
+import 'package:my_app/models/user_models.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: false).user;
+    User user = Provider.of<UserProvider>(context, listen: false).user;
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -58,7 +59,7 @@ class _UserProfileState extends State<UserProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user.userName,
+                            '${user.firstName} ${user.lastName}',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
