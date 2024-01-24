@@ -11,14 +11,14 @@ import 'package:my_app/models/cart_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
-class CartTap extends StatefulWidget {
-  const CartTap({super.key});
+class CartTab extends StatefulWidget {
+  const CartTab({super.key});
 
   @override
-  State<CartTap> createState() => _CartTapState();
+  State<CartTab> createState() => _CartTabState();
 }
 
-class _CartTapState extends State<CartTap> {
+class _CartTabState extends State<CartTab> {
   CartModel productCart = CartModel(
     id: '',
     userId: '',
@@ -29,10 +29,11 @@ class _CartTapState extends State<CartTap> {
   bool checked = true;
   int valueChecked = 0;
   List<int> price = [
-    19990000,
-    34990000,
-    23590000,
-    14990000,
+    1,
+    3,
+    2,
+    1,
+    1,
   ];
   @override
   void initState() {

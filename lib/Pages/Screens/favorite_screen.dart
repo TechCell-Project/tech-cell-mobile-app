@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/Providers/product_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:my_app/API/api_login.dart';
+import 'package:my_app/Pages/Tabs/cart_tab.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -12,26 +12,16 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
-    final product =
-        Provider.of<ProductProvider>(context, listen: false).products;
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: product.length,
-                itemBuilder: (context, index) {
-                  return Text('${product[index].name}');
-                },
-              ),
-              Text('${product.length}'),
-              Text('as'),
-            ],
-          ),
-        ),
+      body: FutureBuilder<String?>(
+        future: AuthLogin.getAccessToken(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return Container();
+          } else {
+            return CartTab();
+          }
+        },
       ),
     );
   }
