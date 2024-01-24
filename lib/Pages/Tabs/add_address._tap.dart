@@ -36,23 +36,24 @@ class _AddAddressTapState extends State<AddAddressTap> {
   void addAddress() {
     if (_formKey.currentState!.validate()) {
       address.pathAddress(
-          context,
-          AddressModel(
-            addressName: detailController.text,
-            customerName: fullNameController.text,
-            phoneNumbers: phoneNumberController.text,
-            provinceLevel: ProvinceLevel(
-                province_id: selectedProvince!.province_id,
-                province_name: selectedProvince!.province_name),
-            districtLevel: DistrictLevel(
-                district_id: selecttedDistricts!.district_id,
-                district_name: selecttedDistricts!.district_name),
-            wardLevel: WardLevel(
-                wardCode: selectedWards!.wardCode,
-                wardName: selectedWards!.wardName),
-            detail: detailController.text,
-            isDefault: false,
-          ));
+        context,
+        AddressModel(
+          addressName: detailController.text,
+          customerName: fullNameController.text,
+          phoneNumbers: phoneNumberController.text,
+          provinceLevel: ProvinceLevel(
+              province_id: selectedProvince!.province_id,
+              province_name: selectedProvince!.province_name),
+          districtLevel: DistrictLevel(
+              district_id: selecttedDistricts!.district_id,
+              district_name: selecttedDistricts!.district_name),
+          wardLevel: WardLevel(
+              wardCode: selectedWards!.wardCode,
+              wardName: selectedWards!.wardName),
+          detail: detailController.text,
+          isDefault: false,
+        ),
+      );
     }
   }
 

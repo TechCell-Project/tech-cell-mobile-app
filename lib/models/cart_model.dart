@@ -4,15 +4,15 @@ import 'dart:convert';
 class CartModel {
   String id;
   String userId;
-  int cartCountProduct;
   List<Product> product;
+  int cartCountProduct;
   String cartState;
 
   CartModel({
     required this.id,
     required this.userId,
-    required this.cartCountProduct,
     required this.product,
+    required this.cartCountProduct,
     required this.cartState,
   });
 
@@ -20,8 +20,8 @@ class CartModel {
     return <String, dynamic>{
       '_id': id,
       'userId': userId,
-      'cartCountProducts': cartCountProduct,
       'products': product.map((x) => x.toMap()).toList(),
+      'cartCountProducts': cartCountProduct,
       'cartState': cartState,
     };
   }
@@ -30,11 +30,11 @@ class CartModel {
     return CartModel(
       id: map['_id'] as String? ?? '',
       userId: map['userId'] as String? ?? '',
-      cartCountProduct: map['cartCountProducts'] as int? ?? 0,
       product: (map['products'] as List<dynamic>?)
               ?.map<Product>((x) => Product.fromMap(x as Map<String, dynamic>))
               .toList() ??
           [],
+      cartCountProduct: map['cartCountProducts'] as int? ?? 0,
       cartState: map['cartState'] as String? ?? '',
     );
   }

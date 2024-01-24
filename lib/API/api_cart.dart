@@ -14,8 +14,12 @@ import 'package:provider/provider.dart';
 class CartApi {
   Future<CartModel> getCart(BuildContext context) async {
     CartModel cartModel = CartModel(
-        id: '', userId: '', cartCountProduct: 1, product: [], cartState: '');
-
+      id: '',
+      userId: '',
+      cartCountProduct: 1,
+      product: [],
+      cartState: '',
+    );
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
@@ -27,17 +31,17 @@ class CartApi {
         'Authorization': 'Bearer $accessToken',
       };
       http.Response res = await http.get(
-        Uri.parse(
-          '${uri}carts',
-        ),
-        headers: headers,
+        Uri.parse('${uri}carts'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
       );
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () async {
-          String jsonres = res.body;
-          dynamic decodeData = jsonDecode(jsonres);
+          String jsonRes = res.body;
+          dynamic decodeData = jsonDecode(jsonRes);
           cartModel = CartModel.fromMap(decodeData);
         },
       );
@@ -65,15 +69,16 @@ class CartApi {
         'Content-Type': 'application/json; charset=UTF-8',
       };
       http.Response res = await http.post(
-        Uri.parse(
-          '${uri}carts',
-        ),
-        headers: headers,
+        Uri.parse('${uri}carts'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
         body: jsonEncode(
           {
-            "productId": productId,
-            "sku": sku,
-            "quantity": quantity,
+            'productId': productId,
+            'sku': sku,
+            'quantity': quantity,
           },
         ),
       );

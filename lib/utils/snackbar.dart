@@ -72,7 +72,7 @@ void showSnackBarSuccess(BuildContext context, String text) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Thanh cong',
+                    'Thành công',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,

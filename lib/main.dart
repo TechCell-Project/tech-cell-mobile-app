@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/main_screen.dart';
+import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -10,9 +11,9 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => UserProvider()),
-      // ChangeNotifierProvider(create: (_) => AddressProvider()),
+      ChangeNotifierProvider(create: (_) => ProductProvider()),
     ],
-    child: const MyApp(),
+    child: MyApp(),
   ));
 }
 
@@ -23,10 +24,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 248, 119, 110),
+        primaryColor: Color.fromARGB(255, 248, 119, 110),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MainScreen(),
+      home: MainScreen(),
     );
   }
 }

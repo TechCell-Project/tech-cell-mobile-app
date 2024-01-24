@@ -1,43 +1,60 @@
 class CategoryModels {
   String name;
-  String iconPath;
+  String image;
 
-  CategoryModels({required this.name, required this.iconPath});
+  CategoryModels({required this.name, required this.image});
 
   static List<CategoryModels> getCategory() {
     List<CategoryModels> categories = [];
 
-    categories.add(
-      CategoryModels(
-        name: 'laptop',
-        iconPath: 'assets/icons/laptop.png',
-      ),
-    );
-
-    categories.add(
-      CategoryModels(
-        name: 'headset',
-        iconPath: 'assets/icons/headset.png',
-      ),
-    );
-    categories.add(
-      CategoryModels(
-        name: 'keyboard',
-        iconPath: 'assets/icons/keyboard.png',
-      ),
-    );
-    categories.add(
-      CategoryModels(
-        name: 'mouse-clicker',
-        iconPath: 'assets/icons/mouse-clicker.png',
-      ),
-    );
-    categories.add(
-      CategoryModels(
-        name: 'smartphone',
-        iconPath: 'assets/icons/smartphone.png',
-      ),
-    );
+    categories.add(CategoryModels(
+      name: 'Điện thoại Điện thoại',
+      image: 'assets/images/brand_category_img/1.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/2.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/3.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại Điện thoại',
+      image: 'assets/images/brand_category_img/4.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/5.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/6.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/7.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/8.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/9.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/10.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/11.webp',
+    ));
+    categories.add(CategoryModels(
+      name: 'Điện thoại',
+      image: 'assets/images/brand_category_img/12.webp',
+    ));
 
     return categories;
   }
