@@ -15,6 +15,9 @@ class UserProvider extends ChangeNotifier {
     refreshToken: '',
     avatar: ImageModel(publicId: '', url: ''),
     address: [],
+    role: '',
+    createdAt: '',
+    updatedAt: '',
   );
   User get user => _user;
 

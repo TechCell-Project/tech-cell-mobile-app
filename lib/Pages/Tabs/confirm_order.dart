@@ -6,28 +6,16 @@ import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Address/button_in_address.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/address_model.dart';
-import 'package:my_app/models/cart_model.dart';
+import 'package:my_app/models/order_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmOrder extends StatefulWidget {
-  double totalOrder;
-  List<String> image;
-  List<String> title;
-  List<int> price;
-  int totalQuantity;
-  int indexAddress;
-  List<Product> product;
+  OrderReviewResponse orderResponse;
 
   ConfirmOrder({
     super.key,
-    required this.totalOrder,
-    required this.image,
-    required this.price,
-    required this.title,
-    required this.indexAddress,
-    required this.product,
-    required this.totalQuantity,
+    required this.orderResponse,
   });
 
   @override
@@ -35,56 +23,62 @@ class ConfirmOrder extends StatefulWidget {
 }
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
-  int delivery = 0;
-  int discount = 20;
   int valueMethodPayment = 1;
   String? paymentMethod = 'COD';
-  double getCartTotal() {
-    double total =
-        widget.totalOrder + delivery - (widget.totalOrder * (20 / 100));
+  int getCartTotal() {
+    int total = widget.orderResponse.totalPrice +
+        widget.orderResponse.shipping.giaohangnhanh.serviceFee;
+    return total;
+  }
+
+  int getQuantity() {
+    int total = 0;
+    for (int i = 0; i < widget.orderResponse.product.length; i++) {
+      total += widget.orderResponse.product[i].quantity;
+    }
     return total;
   }
 
   void createOder() {
-    Order().createOrder(
+    OrderApi().createOrder(
       context: context,
       paymentMethod: paymentMethod!,
-      addressSelected: widget.indexAddress,
-      product: widget.product,
+      addressSelected: widget.orderResponse.addressSelected,
+      product: widget.orderResponse.product,
     );
   }
 
-  openDiaologCart() => showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Don hang cua ban'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.title.length,
-                itemBuilder: ((context, index) {
-                  return Row(
-                    children: [
-                      Image.asset(
-                        widget.image[index],
-                        width: 50,
-                      ),
-                      Text(widget.title[index]),
-                    ],
-                  );
-                })),
-          ),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Dong')),
-          ],
-        );
-      });
+  // openDiaologCart() => showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Don hang cua ban'),
+  //         content: SizedBox(
+  //           width: double.maxFinite,
+  //           child: ListView.builder(
+  //               shrinkWrap: true,
+  //               itemCount: widget.title.length,
+  //               itemBuilder: ((context, index) {
+  //                 return Row(
+  //                   children: [
+  //                     Image.asset(
+  //                       widget.image[index],
+  //                       width: 50,
+  //                     ),
+  //                     Text(widget.title[index]),
+  //                   ],
+  //                 );
+  //               })),
+  //         ),
+  //         actions: [
+  //           ElevatedButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: const Text('Dong')),
+  //         ],
+  //       );
+  //     });
 
   List<AddressModel> addressUser = [];
   @override
@@ -149,7 +143,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             Row(
                               children: [
                                 Text(
-                                  addressUser[widget.indexAddress].customerName,
+                                  addressUser[
+                                          widget.orderResponse.addressSelected]
+                                      .customerName,
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
@@ -163,7 +159,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   ),
                                 ),
                                 Text(
-                                  addressUser[widget.indexAddress].phoneNumbers,
+                                  addressUser[
+                                          widget.orderResponse.addressSelected]
+                                      .phoneNumbers,
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
@@ -175,15 +173,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(addressUser[widget.indexAddress].detail),
+                                Text(addressUser[
+                                        widget.orderResponse.addressSelected]
+                                    .detail),
                                 Row(
                                   children: [
                                     Text(
-                                        "${addressUser[widget.indexAddress].wardLevel.wardName}, "),
+                                        "${addressUser[widget.orderResponse.addressSelected].wardLevel.wardName}, "),
                                     Text(
-                                        "${addressUser[widget.indexAddress].districtLevel.district_name}, "),
+                                        "${addressUser[widget.orderResponse.addressSelected].districtLevel.district_name}, "),
                                     Text(
-                                        "${addressUser[widget.indexAddress].provinceLevel.province_name},"),
+                                        "${addressUser[widget.orderResponse.addressSelected].provinceLevel.province_name},"),
                                   ],
                                 ),
                               ],
@@ -197,7 +197,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                 const SizedBox(height: 30),
                 ButtonSendrequest(
                   text: 'Kiểm tra đơn hàng',
-                  submit: openDiaologCart,
+                  submit: () {},
                 ),
                 const SizedBox(height: 30),
                 const Text(
@@ -249,7 +249,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                       Row(
                         children: [
                           const Text(
-                            'Thanh toán qua VNPay',
+                            'Thanh toán qua VNPAY',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -263,7 +263,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             onChanged: (check) {
                               setState(() {
                                 valueMethodPayment = check!;
-                                paymentMethod = 'VNPay';
+                                paymentMethod = 'VNPAY';
                               });
                             },
                           ),
@@ -300,7 +300,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "${widget.totalQuantity}",
+                            getQuantity().toString(),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -326,7 +326,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "${widget.totalOrder}",
+                            "${widget.orderResponse.totalPrice}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -352,33 +352,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "$delivery VND",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 30,
-                        thickness: 0.5,
-                        color: Color(0xFF475269),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Giảm giá",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                          Text(
-                            "$discount %",
+                            "${widget.orderResponse.shipping.giaohangnhanh.total}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

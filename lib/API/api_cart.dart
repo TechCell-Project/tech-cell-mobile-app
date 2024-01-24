@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/models/cart_model.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,13 @@ class CartApi {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
+      if (accessToken.isEmpty) {
+        var newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
+      var headers = {
+        'Authorization': 'Bearer $accessToken',
+      };
       http.Response res = await http.get(
         Uri.parse('${uri}carts'),
         headers: {
@@ -52,6 +60,14 @@ class CartApi {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
+      if (accessToken.isEmpty) {
+        final newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
+      var headers = {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
       http.Response res = await http.post(
         Uri.parse('${uri}carts'),
         headers: {
@@ -70,7 +86,7 @@ class CartApi {
         response: res,
         context: context,
         onSuccess: () async {
-          showSnackBarSuccess(context, 'Thành công');
+          getCart(context);
         },
       );
     } catch (e) {

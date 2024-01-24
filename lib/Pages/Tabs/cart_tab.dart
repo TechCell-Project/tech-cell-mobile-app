@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_cart.dart';
+import 'package:my_app/API/api_order.dart';
 import 'package:my_app/Pages/Tabs/add_address._tap.dart';
 import 'package:my_app/Pages/Tabs/change_address.dart';
-import 'package:my_app/Pages/Tabs/confirm_order.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/address_model.dart';
@@ -26,21 +26,8 @@ class _CartTapState extends State<CartTap> {
     product: [],
     cartState: '',
   );
-  List<Product> product = [];
   bool checked = true;
   int valueChecked = 0;
-  List<String> imageList = [
-    'assets/images/galaxy-z-fold-5-xanh-1.png',
-    'assets/images/galaxys23ultra_front_green_221122_2.png',
-    'assets/images/samsung_galaxy_z_flip_m_i_2022-1_1.png',
-    'assets/images/sm-s908_galaxys22ultra_front_phantomblack_211119_2.png',
-  ];
-  List<String> productTitle = [
-    'Samsung 1Galaxy Z Flip 5',
-    'Samsung 2Galaxy Z Fold 5',
-    'Samsung 3Galaxy S23 Ultra',
-    'Samsung 4Galaxy Z Flip 4',
-  ];
   List<int> price = [
     19990000,
     34990000,
@@ -55,6 +42,11 @@ class _CartTapState extends State<CartTap> {
         productCart = data;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void inCrementQuantity(int index) {
@@ -99,6 +91,14 @@ class _CartTapState extends State<CartTap> {
       total += productCart.product[i].quantity * price[i];
     }
     return total;
+  }
+
+  void getReviewOder() {
+    OrderApi().reviewOrder(
+      context: context,
+      addressSelected: valueChecked,
+      productSelected: (productCart.product),
+    );
   }
 
   openDiaologAddress() {
@@ -311,21 +311,9 @@ class _CartTapState extends State<CartTap> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonSendrequest(
-                    text: "Xác nhận",
-                    submit: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConfirmOrder(
-                                    totalOrder: getCartTotal(),
-                                    totalQuantity: getquantity(),
-                                    image: imageList,
-                                    price: price,
-                                    title: productTitle,
-                                    indexAddress: valueChecked,
-                                    product: productCart.product,
-                                  )));
-                    }),
+                  text: "Xác nhận",
+                  submit: getReviewOder,
+                ),
               ),
             ],
           );
@@ -348,165 +336,169 @@ class _CartTapState extends State<CartTap> {
         padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: productCart.product.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: Key(productCart.product[index].productId),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      setState(() {
-                        product.removeAt(index);
-                      });
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: const Icon(
-                        Icons.cancel,
-                        color: Colors.white,
+            if (productCart.product.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: productCart.product.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Dismissible(
+                      key: Key(productCart.product[index].productId),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        setState(() {
+                          productCart.product.removeAt(index);
+                        });
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: const Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    child: Container(
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 15),
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: checked,
-                            onChanged: (val) {
-                              setState(() {
-                                checked = !checked;
-                              });
-                            },
-                          ),
-                          Container(
-                            height: 70,
-                            width: 70,
-                            margin: const EdgeInsets.only(right: 15),
-                            child: Image.asset(
-                              'assets/images/galaxy-z-fold-5-xanh-1.png',
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
+                      child: Container(
+                        height: 110,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: checked,
+                              onChanged: (val) {
+                                setState(() {
+                                  checked = !checked;
+                                });
+                              },
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 120,
-                                  child: Text(
-                                    productCart.product[index].sku,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                            Container(
+                              height: 70,
+                              width: 70,
+                              margin: const EdgeInsets.only(right: 15),
+                              child: Image.asset(
+                                'assets/images/galaxy-z-fold-5-xanh-1.png',
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 120,
+                                    child: Text(
+                                      productCart.product[index].sku,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    '${price[index]} VND',
                                     style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 18,
+                                        color: primaryColors,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    deCrementQuantity(index);
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 3,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: const Icon(
+                                        Icons.remove,
+                                        size: 15,
+                                      )),
+                                ),
+                                const SizedBox(width: 10),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(
+                                    productCart.product[index].quantity
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  '${price[index]} VND',
-                                  style: const TextStyle(
-                                      color: primaryColors,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900),
+                                InkWell(
+                                  onTap: () {
+                                    inCrementQuantity(index);
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 3,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 15,
+                                      )),
                                 ),
                               ],
-                            ),
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  deCrementQuantity(index);
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    width: 30,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 3,
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(
-                                      Icons.remove,
-                                      size: 15,
-                                    )),
-                              ),
-                              const SizedBox(width: 10),
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Text(
-                                  productCart.product[index].quantity
-                                      .toString(),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  inCrementQuantity(index);
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    width: 30,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 3,
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(
-                                      Icons.add,
-                                      size: 15,
-                                    )),
-                              ),
-                            ],
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                    );
+                  },
+                ),
+              )
+            else
+              const Center(
+                  child: Image(image: AssetImage('assets/icons/delete.png'))),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               padding: const EdgeInsets.all(15),

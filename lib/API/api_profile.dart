@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_app/API/api_login.dart';
+import 'package:my_app/Providers/token_manager.dart';
 import 'package:my_app/Providers/user_provider.dart';
+import 'package:my_app/models/user_models.dart';
 
 import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/snackbar.dart';
@@ -18,6 +20,10 @@ class ProfileUser {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
+      if (accessToken.isEmpty) {
+        var newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
       http.Response response = await http.patch(
         Uri.parse('${uri}profile/info'),
         body: {
@@ -74,10 +80,33 @@ class ProfileUser {
     );
   }
 
-  Future<void> getProfileUser(BuildContext context) async {
+  Future<User> getProfileUser(BuildContext context) async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    User userModele = User(
+      id: '',
+      email: '',
+      userName: '',
+      firstName: '',
+      lastName: '',
+      password: '',
+      re_password: '',
+      accessToken: AuthLogin.getAccessToken().toString(),
+      refreshToken: TokenManager.getRefreshToken().toString(),
+      avatar: ImageModel(
+        publicId: '',
+        url: '',
+      ),
+      address: [],
+      role: '',
+      createdAt: '',
+      updatedAt: '',
+    );
     try {
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
       String accessToken = userProvider.user.accessToken;
+      if (accessToken.isEmpty) {
+        final newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
       var headers = {
         'Authorization': 'Bearer $accessToken',
       };
@@ -90,10 +119,13 @@ class ProfileUser {
       httpErrorHandle(
         response: res,
         context: context,
-        onSuccess: () async {},
+        onSuccess: () async {
+          userProvider.setUser(res.body);
+        },
       );
     } catch (e) {
       showSnackBarError(context, e.toString());
     }
+    return userModele;
   }
 }

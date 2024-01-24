@@ -25,17 +25,20 @@ class ImageModel {
 }
 
 class User {
-  final String id;
-  final String email;
-  final String userName;
-  final String firstName;
-  final String lastName;
-  final String accessToken;
-  final String password;
-  final String refreshToken;
-  final String re_password;
-  final ImageModel avatar;
+  String id;
+  String email;
+  String userName;
+  String firstName;
+  String lastName;
+  String accessToken;
+  String password;
+  String refreshToken;
+  String re_password;
+  ImageModel avatar;
   List<AddressModel> address;
+  String role;
+  String createdAt;
+  String updatedAt;
 
   User({
     required this.id,
@@ -49,11 +52,14 @@ class User {
     required this.refreshToken,
     required this.avatar,
     required this.address,
+    required this.createdAt,
+    required this.role,
+    required this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
+    return {
+      '_id': id,
       'email': email,
       'userName': userName,
       'firstName': firstName,
@@ -66,12 +72,15 @@ class User {
       're_password': re_password,
       'avatar': avatar,
       'address': address.map((x) => x.toMap()).toList(),
+      'role': role,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] ?? '',
+      id: map['_id'] ?? '',
       email: map['email'] ?? '',
       userName: map['userName'] ?? '',
       firstName: map['firstName'] ?? '',
@@ -93,6 +102,9 @@ class User {
                   [],
             )
           : [],
+      role: map['role'] ?? '',
+      createdAt: map['createdAt'] ?? '',
+      updatedAt: map['updatedAt'] ?? '',
     );
   }
 
