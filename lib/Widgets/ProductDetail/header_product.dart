@@ -13,7 +13,6 @@ class HeaderProductDetail extends StatefulWidget {
 
 class _HeaderState extends State<HeaderProductDetail> {
   late Color _backgroundColor;
-
   late Color _colorIcon;
   late double _opacity;
   late double _offset;
@@ -23,11 +22,9 @@ class _HeaderState extends State<HeaderProductDetail> {
   @override
   void initState() {
     _backgroundColor = Colors.transparent;
-
     _colorIcon = Colors.white;
     _opacity = 0.0;
     _offset = 0.0;
-
     widget.scrollController.addListener(_onScroll);
     super.initState();
   }

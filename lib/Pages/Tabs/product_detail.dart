@@ -21,12 +21,6 @@ class ProductDetail extends StatefulWidget {
   State<ProductDetail> createState() => _ProductDetailState();
 }
 
-extension MyExtension on String {
-  String capitalize() {
-    return '${this[0].toUpperCase()}${this.substring(1).toLowerCase()}';
-  }
-}
-
 class _ProductDetailState extends State<ProductDetail> {
   final TrackingScrollController _scrollController = TrackingScrollController();
   final CarouselController _controller = CarouselController();

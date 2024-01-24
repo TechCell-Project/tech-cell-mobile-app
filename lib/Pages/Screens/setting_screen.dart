@@ -18,9 +18,9 @@ class _SettingScreenState extends State<SettingScreen> {
         future: AuthLogin.getAccessToken(),
         builder: (context, snapshoot) {
           if (snapshoot.data == null) {
-            return const LoginTap();
+            return LoginTap();
           } else {
-            return const UserProfile();
+            return UserProfile();
           }
         },
       ),

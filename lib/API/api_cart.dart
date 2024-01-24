@@ -54,10 +54,6 @@ class CartApi {
       String accessToken = userProvider.user.accessToken;
       http.Response res = await http.post(
         Uri.parse('${uri}carts'),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
         body: jsonEncode(
           {
             'productId': productId,
@@ -65,6 +61,10 @@ class CartApi {
             'quantity': quantity,
           },
         ),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       );
       httpErrorHandle(
         response: res,
