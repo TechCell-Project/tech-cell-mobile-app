@@ -51,6 +51,8 @@ class AddressModel {
       };
 
   toMap() {}
+
+  static fromMap(Map<String, dynamic> map) {}
 }
 
 class DistrictLevel {

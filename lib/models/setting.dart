@@ -3,6 +3,7 @@ import 'package:my_app/Pages/Screens/home_screen.dart';
 import 'package:my_app/Pages/Tabs/address_user.dart';
 import 'package:my_app/Pages/Tabs/change_password.dart';
 import 'package:my_app/Pages/Tabs/information_user.dart';
+import 'package:my_app/Pages/Tabs/order_user.dart';
 
 class SettingModel {
   String title;
@@ -27,6 +28,11 @@ final List<SettingModel> settings = [
     title: 'Địa chỉ',
     route: const AddressUser(),
     icon: CupertinoIcons.location,
+  ),
+  SettingModel(
+    title: 'Đơn hàng của bạn',
+    route: const OrderUserTap(),
+    icon: CupertinoIcons.shopping_cart,
   ),
 ];
 final List<SettingModel> settings2 = [
