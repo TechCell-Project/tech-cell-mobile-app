@@ -1,15 +1,13 @@
 // ignore_for_file: unused_element, null_check_always_fails
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:my_app/API/api_cart.dart';
-import 'package:my_app/models/cart_model.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
 
 class AddToStore extends StatefulWidget {
-  final List<Variation> variations;
   final productId;
+  final List<Variation> variations;
   const AddToStore({required this.variations, required this.productId});
 
   @override
@@ -19,21 +17,13 @@ class AddToStore extends StatefulWidget {
 class _AddToStoreState extends State<AddToStore> {
   Map<String, Attributes> selectedAttributes = {};
   String? selectedSku;
-  CartModel productCart = CartModel(
-    id: '',
-    userId: '',
-    cartCountProduct: 0,
-    product: [],
-    cartState: '',
-  );
-  List<Product> product = [];
 
   @override
   void initState() {
     super.initState();
     selectedAttributes = {};
-    selectedSku = null;
     _selectFirstAttribute();
+    selectedSku = widget.variations[0].sku;
   }
 
   void _selectFirstAttribute() {
@@ -83,9 +73,6 @@ class _AddToStoreState extends State<AddToStore> {
 
   @override
   Widget build(BuildContext context) {
-    final formatCurrency =
-        new NumberFormat.currency(locale: 'id', decimalDigits: 0, name: 'đ');
-
     final attributeKeys = widget.variations.first.attributes
         .map((attr) => attr.k)
         .toSet()
@@ -132,6 +119,12 @@ class _AddToStoreState extends State<AddToStore> {
                                     height: 160,
                                     width: 160,
                                   );
+                                } else if (index == 0) {
+                                  return Image(
+                                    image: NetworkImage('${image.url}'),
+                                    height: 160,
+                                    width: 160,
+                                  );
                                 }
                                 return SizedBox();
                               },
@@ -144,7 +137,7 @@ class _AddToStoreState extends State<AddToStore> {
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       ),
                       SizedBox(width: 5),
@@ -153,7 +146,7 @@ class _AddToStoreState extends State<AddToStore> {
                         style: TextStyle(
                           color: Colors.grey.withOpacity(1),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       ),
                       SizedBox(width: 5),
@@ -163,13 +156,13 @@ class _AddToStoreState extends State<AddToStore> {
                           color: Colors.grey.withOpacity(1),
                           fontWeight: FontWeight.w400,
                           decoration: TextDecoration.lineThrough,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       ),
                     ],
                   );
                 }
-                return SizedBox();
+                return Container();
               },
             ),
           ),
@@ -181,15 +174,15 @@ class _AddToStoreState extends State<AddToStore> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 250,
+                    height: 300,
                     child: GridView.builder(
                       itemCount: attributeKeys.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
                         childAspectRatio: 3,
                       ),
-                      itemBuilder: (BuildContext context, int index) {
-                        final key = attributeKeys[index];
+                      itemBuilder: (BuildContext context, int indexFirst) {
+                        final key = attributeKeys[indexFirst];
                         final attributes = groupedAttributes[key]!;
 
                         return Container(
@@ -254,10 +247,9 @@ class _AddToStoreState extends State<AddToStore> {
                                           selectedAttributes[key]?.v ==
                                               attribute.v;
 
-                                      final isSelectable =
-                                          index == isAttributeInVariations
-                                              ? true
-                                              : isAttributeInVariations;
+                                      final isSelectable = indexFirst == 0
+                                          ? true
+                                          : isAttributeInVariations;
 
                                       return ElevatedButton(
                                         onPressed: isSelectable
@@ -292,40 +284,6 @@ class _AddToStoreState extends State<AddToStore> {
                       },
                     ),
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(vertical: 20),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text(
-                  //         'Số lượng',
-                  //         style: TextStyle(
-                  //           fontSize: 20,
-                  //           fontWeight: FontWeight.w700,
-                  //         ),
-                  //       ),
-                  //       Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //         children: [
-                  //           IconButton(
-                  //             icon: Icon(Icons.remove),
-                  //             onPressed: decreaseNumber,
-                  //           ),
-                  //           Center(
-                  //             child: Text(
-                  //               '$number',
-                  //               style: TextStyle(fontSize: 18),
-                  //             ),
-                  //           ),
-                  //           IconButton(
-                  //             icon: Icon(Icons.add),
-                  //             onPressed: increaseNumber,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: postCart,

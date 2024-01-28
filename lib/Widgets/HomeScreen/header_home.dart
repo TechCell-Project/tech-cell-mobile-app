@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/cart_screen.dart';
+import 'package:my_app/Pages/Tabs/search_product.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -13,7 +14,7 @@ class HeaderHome extends StatefulWidget {
 
 class _HeaderState extends State<HeaderHome> {
   late Color _backgroundColor;
-  late Color _backgroundColorSearch;
+  // late Color _backgroundColorSearch;
   late Color _colorIcon;
   late double _opacity;
   late double _offset;
@@ -22,14 +23,13 @@ class _HeaderState extends State<HeaderHome> {
 
   @override
   void initState() {
+    super.initState();
     _backgroundColor = primaryColors.withOpacity(0.1);
-    _backgroundColorSearch = Colors.white;
-    _colorIcon = Colors.white;
+    // _backgroundColorSearch = Colors.white;
+    _colorIcon = Colors.black;
     _opacity = 0.0;
     _offset = 0.0;
-
     widget.scrollController.addListener(_onScroll);
-    super.initState();
   }
 
   @override
@@ -47,7 +47,6 @@ class _HeaderState extends State<HeaderHome> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _buildSearch(),
-                    SizedBox(width: 15),
                     _buildCartButton(),
                   ],
                 ),
@@ -57,26 +56,34 @@ class _HeaderState extends State<HeaderHome> {
   }
 
   _buildSearch() {
-    final border = OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.transparent, width: 0),
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-    );
-
-    final sizeIcon = BoxConstraints(minWidth: 40, minHeight: 40);
-
-    return Expanded(
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(4),
-          focusedBorder: border,
-          enabledBorder: border,
-          isDense: true,
-          hintText: "Tìm kiếm...",
-          hintStyle: TextStyle(fontSize: 18, color: primaryColors),
-          prefixIcon: Icon(Icons.search),
-          prefixIconConstraints: sizeIcon,
-          filled: true,
-          fillColor: _backgroundColorSearch,
+    return InkWell(
+      onTap: () {
+        showSearch(context: context, delegate: SearchProduct());
+      },
+      child: Container(
+        height: 40,
+        width: 310,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Icon(Icons.search, color: Colors.black),
+            ),
+            Text(
+              'Tìm kiếm...',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -91,7 +98,7 @@ class _HeaderState extends State<HeaderHome> {
         },
         child: badges.Badge(
           badgeContent: Text('0', style: TextStyle(color: Colors.white)),
-          child: Icon(Icons.shopping_cart, color: _colorIcon, size: 35),
+          child: Icon(Icons.shopping_cart, color: _colorIcon, size: 40),
         ),
       ),
     );
@@ -114,12 +121,12 @@ class _HeaderState extends State<HeaderHome> {
 
     setState(() {
       if (scrollOffset <= 0) {
-        _backgroundColorSearch = Colors.white;
-        _colorIcon = Colors.white;
+        // _backgroundColorSearch = Colors.white;
+        _colorIcon = Colors.black;
         _offset = 0.0;
         _opacity = 0.0;
       } else {
-        _backgroundColorSearch = Colors.grey.shade200;
+        // _backgroundColorSearch = Colors.grey.shade200;
         _colorIcon = primaryColors;
       }
 

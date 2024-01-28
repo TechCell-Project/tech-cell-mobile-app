@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 BannerSlider(),
                 Category(),
-                TitleWithMoreBtn(text: 'KHUYẾN MÃI HOT'),
+                TitleWithMoreBtn(text: 'Sản phẩm nổi bật'),
                 ProductHotSale(),
                 SizedBox(height: 15),
                 TitleWithMoreBtn(text: 'SẢN PHẨM MỚI '),

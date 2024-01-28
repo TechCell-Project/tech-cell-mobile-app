@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     FavoriteScreen(),
     NotiScreen(),
-    SettingScreen()
+    SettingScreen(),
   ];
 
   @override
@@ -32,18 +32,15 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 8,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           child: GNav(
             gap: 4,
             backgroundColor: Colors.white.withOpacity(0.8),
             color: Colors.black.withOpacity(0.6),
-            activeColor: primaryColors,
-            tabBackgroundColor: Colors.grey.shade300,
+            activeColor: Colors.white,
+            tabBackgroundColor: primaryColors,
             padding: EdgeInsets.all(16),
-            iconSize: 22,
+            iconSize: 25,
             onTabChange: (index) {
               setState(() {
                 pageIndex = index;
