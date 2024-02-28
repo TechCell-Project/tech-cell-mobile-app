@@ -3,19 +3,17 @@ import 'package:my_app/API/api_cart.dart';
 import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/cart_model.dart';
-import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
 class CartTap extends StatefulWidget {
-  const CartTap({super.key});
+  const CartTap({Key? key}) : super(key: key);
 
   @override
   State<CartTap> createState() => _CartTapState();
 }
 
 class _CartTapState extends State<CartTap> {
-  List<Product> product = [];
   CartModel productCart = CartModel(
     id: '',
     userId: '',
@@ -24,8 +22,7 @@ class _CartTapState extends State<CartTap> {
     cartState: '',
   );
 
-  bool checked = true;
-  int valueChecked = 0;
+  List<bool> productSelected = [];
 
   @override
   void initState() {
@@ -33,6 +30,9 @@ class _CartTapState extends State<CartTap> {
     CartApi().getCart(context).then((data) {
       setState(() {
         productCart = data;
+        // Initialize productSelected list with false for each product
+        productSelected =
+            List.generate(productCart.product.length, (index) => false);
       });
     });
   }
@@ -65,22 +65,33 @@ class _CartTapState extends State<CartTap> {
     );
   }
 
+  void deleteCart(int index) {
+    CartApi().updateCart(
+      context: context,
+      productId: productCart.product[index].productId,
+      sku: productCart.product[index].sku,
+      quantity: 0,
+    );
+  }
+
+  double getTotalAmount() {
+    double total = 0;
+    for (var i = 0; i < productCart.product.length; i++) {
+      if (productSelected[i]) {
+        final itemCart = productCart.product[i];
+        final itemProduct = Provider.of<ProductProvider>(context, listen: false)
+            .products
+            .firstWhere((product) => product.id == itemCart.productId);
+        final variation = itemProduct.variations
+            .firstWhere((variation) => variation.sku == itemCart.sku);
+        total += itemCart.quantity * variation.price.special;
+      }
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<ProductModel> productProvider =
-        Provider.of<ProductProvider>(context, listen: false).products;
-
-    // double getTotalAmount(int index) {
-    //   double total = 0;
-
-    //   for (int i = 0; i < productCart.product.length; i++) {
-    //     int price = productProvider[index].variations[0].price.sale;
-    //     total += productCart.product[i].quantity * price;
-    //   }
-
-    //   return total;
-    // }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Giỏ hàng'),
@@ -110,14 +121,19 @@ class _CartTapState extends State<CartTap> {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: productProvider.length,
+                        itemCount: productCart.product.length,
                         itemBuilder: (context, indexSecond) {
-                          final itemProduct = productProvider[indexSecond];
+                          final itemProduct = Provider.of<ProductProvider>(
+                                  context,
+                                  listen: false)
+                              .products[indexSecond];
                           if (itemCart.productId == itemProduct.id) {
                             return Dismissible(
                               key: Key(itemCart.productId),
                               direction: DismissDirection.endToStart,
-                              onDismissed: (direction) {},
+                              onDismissed: (direction) {
+                                deleteCart(indexFirst);
+                              },
                               background: Container(
                                 color: Colors.red,
                                 alignment: Alignment.centerRight,
@@ -139,16 +155,19 @@ class _CartTapState extends State<CartTap> {
                                 ),
                                 child: Row(
                                   children: [
-                                    // Center(
-                                    //   child: Checkbox(
-                                    //     value: checked,
-                                    //     onChanged: (val) {
-                                    //       setState(() {
-                                    //         checked = !checked;
-                                    //       });
-                                    //     },
-                                    //   ),
-                                    // ),
+                                    SizedBox(width: 20),
+                                    SizedBox(
+                                      width: 10, // Set your desired width here
+                                      child: Checkbox(
+                                        value: productSelected[indexFirst],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            productSelected[indexFirst] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                    ),
                                     Expanded(
                                       child: ListView.builder(
                                         shrinkWrap: true,
@@ -161,20 +180,6 @@ class _CartTapState extends State<CartTap> {
                                               .variations[indexThird];
 
                                           if (itemCart.sku == variation.sku) {
-                                            getTotalAmount() {
-                                              double total = 0;
-                                              for (int i = 0;
-                                                  i <
-                                                      productCart
-                                                          .product.length;
-                                                  i++) {}
-                                              total += itemCart.quantity *
-                                                  variation.price.sale;
-                                              return total;
-                                              // total = itemCart.quantity *
-                                              //     variation.price.sale;
-                                            }
-
                                             return Row(
                                               children: [
                                                 Container(
@@ -205,14 +210,13 @@ class _CartTapState extends State<CartTap> {
                                                     },
                                                   ),
                                                 ),
-
-                                                // SizedBox(width: 10),
+                                                SizedBox(width: 5),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Container(
-                                                      width: 200,
+                                                      width: 220,
                                                       child: Text(
                                                         '${itemProduct.name}',
                                                         overflow: TextOverflow
@@ -256,20 +260,11 @@ class _CartTapState extends State<CartTap> {
                                                         ),
                                                       ],
                                                     ),
-                                                    Text(
-                                                      '${getTotalAmount().toString()}',
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
                                                     SizedBox(height: 5),
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          '${formatCurrency.format(variation.price.sale)}',
+                                                          '${formatCurrency.format(variation.price.special)}',
                                                           style: TextStyle(
                                                             color: Colors.red,
                                                             fontWeight:
@@ -467,8 +462,7 @@ class _CartTapState extends State<CartTap> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    'asd',
-                    // '${formatCurrency.format(getTotalAmount())} VND',
+                    '${formatCurrency.format(getTotalAmount())} VND',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,

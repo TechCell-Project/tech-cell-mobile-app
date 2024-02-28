@@ -57,7 +57,12 @@ class _InFrameState extends State<InFrame> {
                         fit: BoxFit.cover,
                       );
                     }
-                    return Container();
+                    return Container(
+                      child: Image.asset(
+                        "assets/images/empty.png",
+                        fit: BoxFit.cover,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -87,7 +92,7 @@ class _InFrameState extends State<InFrame> {
                           Column(
                             children: [
                               Text(
-                                '${formatCurrency.format(variation.price.sale)}',
+                                '${formatCurrency.format(variation.price.special)}',
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.w500,
@@ -139,7 +144,7 @@ class _InFrameState extends State<InFrame> {
                         ],
                       );
                     }
-                    return SizedBox();
+                    return Container();
                   },
                 ),
               ),

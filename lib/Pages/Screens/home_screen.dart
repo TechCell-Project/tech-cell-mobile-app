@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _scrollController = TrackingScrollController();
+  final TrackingScrollController _scrollController = TrackingScrollController();
 
   @override
   Widget build(BuildContext context) {

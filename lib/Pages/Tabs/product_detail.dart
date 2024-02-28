@@ -2,8 +2,6 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/ProductDetail/buy_now.dart';
@@ -12,6 +10,7 @@ import 'package:my_app/Widgets/ProductDetail/add_to_store.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
+import 'package:html/parser.dart' as htmlParser;
 
 class ProductDetail extends StatefulWidget {
   final ProductModel producdetail;
@@ -24,27 +23,21 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   final TrackingScrollController _scrollController = TrackingScrollController();
   final CarouselController _controller = CarouselController();
-  final formatCurrency =
-      new NumberFormat.currency(locale: 'id', decimalDigits: 0, name: 'đ');
-  bool isAttributeInVariations = false;
-  bool isSelected = false;
-  bool isFirstCase = true;
-  String? selectedVariationSku;
-
-  Map<String, Attributes> selectedAttributes = {};
 
   late int _current;
+  bool showMoreInfo = false;
+
+  String parseHtmlToPlainText(String htmlString) {
+    var document = htmlParser.parse(htmlString);
+    String parsedString =
+        htmlParser.parse(document.body!.text).documentElement!.text;
+    return parsedString;
+  }
 
   @override
   void initState() {
     _current = 0;
     super.initState();
-  }
-
-  void handleSelectVariation(String? sku) {
-    setState(() {
-      selectedVariationSku = sku;
-    });
   }
 
   @override
@@ -63,7 +56,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     children: [
                       _sliderImgProduct(),
                       _buildAnimateToSlider(),
-                      _inforProduct(),
+                      _informationProduct(),
                     ],
                   ),
                 ),
@@ -96,13 +89,16 @@ class _ProductDetailState extends State<ProductDetail> {
           var image;
           try {
             final generalImages = widget.producdetail.generalImages[index];
-            image = Image(
-              image: NetworkImage('${generalImages.url}'),
-              fit: BoxFit.cover,
+            image = Container(
+              margin: EdgeInsets.only(top: 25),
+              child: Image(
+                image: NetworkImage('${generalImages.url}'),
+                fit: BoxFit.cover,
+              ),
             );
           } catch (e) {
             image = Container(
-              margin: EdgeInsets.only(top: 15),
+              margin: EdgeInsets.only(top: 25),
               child: Image.asset(
                 "assets/images/no_image.jpg",
                 fit: BoxFit.cover,
@@ -157,7 +153,7 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  _inforProduct() {
+  _informationProduct() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -168,10 +164,10 @@ class _ProductDetailState extends State<ProductDetail> {
           style: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w900,
-            fontSize: 28,
+            fontSize: 25,
           ),
         ),
-        SizedBox(height: 15),
+        SizedBox(height: 10),
         Container(
           child: ListView.builder(
             shrinkWrap: true,
@@ -180,40 +176,19 @@ class _ProductDetailState extends State<ProductDetail> {
             itemBuilder: (context, index) {
               final variation = widget.producdetail.variations[index];
               if (index == 0) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                return Column(
                   children: [
-                    Column(
+                    Row(
                       children: [
                         Text(
-                          '${formatCurrency.format(variation.price.sale)}',
+                          '${formatCurrency.format(variation.price.special)}',
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.w500,
-                            fontSize: 22,
+                            fontSize: 28,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        RatingBar.builder(
-                          initialRating: 3,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemSize: 18,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 1),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
+                        SizedBox(width: 5),
                         Text(
                           '${formatCurrency.format(variation.price.base)}',
                           style: TextStyle(
@@ -223,7 +198,38 @@ class _ProductDetailState extends State<ProductDetail> {
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 8),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            Text(
+                              '4.9/5',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          '|',
+                          style: TextStyle(
+                            color: Colors.grey.withOpacity(0.5),
+                            fontWeight: FontWeight.w400,
+                            decoration: TextDecoration.lineThrough,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(width: 5),
                         Text(
                           'Đã bán' + ' ' + '${variation.stock}' + '+',
                           style: TextStyle(
@@ -237,7 +243,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   ],
                 );
               }
-              return SizedBox();
+              return Container();
             },
           ),
         ),
@@ -262,9 +268,10 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
               ),
               SizedBox(
+                height: showMoreInfo ? null : 190,
                 child: ListView.builder(
                   shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: widget.producdetail.generalAttributes.length,
                   itemBuilder: (context, index) {
                     final generalAttributes =
@@ -280,7 +287,9 @@ class _ProductDetailState extends State<ProductDetail> {
                               padding: EdgeInsets.all(8),
                               child: Text(
                                 '${generalAttributes.name}'.capitalize(),
-                                style: TextStyle(fontSize: 15),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                             Padding(
@@ -295,6 +304,49 @@ class _ProductDetailState extends State<ProductDetail> {
                       ],
                     );
                   },
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        showMoreInfo = !showMoreInfo;
+                      });
+                    },
+                    child: Text(
+                      showMoreInfo ? 'Ẩn bớt' : 'Xem cấu hình chi tiết',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15),
+        Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  'Đặc điểm chi tiết, nổi bật',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Text(
+                '${parseHtmlToPlainText(widget.producdetail.description)}',
+                style: TextStyle(
+                  fontSize: 15,
                 ),
               ),
             ],

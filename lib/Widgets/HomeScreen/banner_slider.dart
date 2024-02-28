@@ -32,57 +32,60 @@ class _BannerSliderState extends State<BannerSlider> {
     );
   }
 
-  _buildBanner() => Container(
-        height: 213,
-        width: double.infinity,
-        child: CarouselSlider(
-          options: CarouselOptions(
-            aspectRatio: 1.873,
-            viewportFraction: 1.0,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _current = index;
-              });
-            },
-          ),
-          items: _imgList
-              .map(
-                (item) => Container(
-                  margin: EdgeInsets.only(top: 83),
-                  child: Image.asset(
-                    item,
-                    fit: BoxFit.contain,
-                    width: double.infinity,
-                  ),
-                ),
-              )
-              .toList(),
+  _buildBanner() {
+    return Container(
+      height: 213,
+      width: double.infinity,
+      child: CarouselSlider(
+        options: CarouselOptions(
+          aspectRatio: 1.873,
+          viewportFraction: 1.0,
+          autoPlay: true,
+          onPageChanged: (index, reason) {
+            setState(() {
+              _current = index;
+            });
+          },
         ),
-      );
+        items: _imgList
+            .map(
+              (item) => Container(
+                margin: EdgeInsets.only(top: 83),
+                child: Image.asset(
+                  item,
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
 
-  _buildIndicator() => Positioned(
-        bottom: 10,
-        left: 0,
-        right: 0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _imgList.map(
-            (url) {
-              int index = _imgList.indexOf(url);
-              return Container(
-                width: 8,
-                height: _current == index ? 8 : 1,
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  shape:
-                      _current == index ? BoxShape.circle : BoxShape.rectangle,
-                  color: Colors.transparent,
-                ),
-              );
-            },
-          ).toList(),
-        ),
-      );
+  _buildIndicator() {
+    return Positioned(
+      bottom: 10,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _imgList.map(
+          (url) {
+            int index = _imgList.indexOf(url);
+            return Container(
+              width: 8,
+              height: _current == index ? 8 : 1,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                shape: _current == index ? BoxShape.circle : BoxShape.rectangle,
+                color: Colors.transparent,
+              ),
+            );
+          },
+        ).toList(),
+      ),
+    );
+  }
 }

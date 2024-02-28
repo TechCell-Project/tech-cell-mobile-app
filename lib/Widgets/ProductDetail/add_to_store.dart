@@ -126,14 +126,14 @@ class _AddToStoreState extends State<AddToStore> {
                                     width: 160,
                                   );
                                 }
-                                return SizedBox();
+                                return Container();
                               },
                             ),
                           ),
                         ],
                       ),
                       Text(
-                        '${formatCurrency.format(variation.price.sale)}',
+                        '${formatCurrency.format(variation.price.special)}',
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.w500,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/cart_screen.dart';
-import 'package:my_app/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 
 class HeaderProductDetail extends StatefulWidget {
@@ -44,7 +43,6 @@ class _HeaderState extends State<HeaderProductDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _buildIconback(),
-                    SizedBox(width: 15),
                     _buildCartButton(),
                   ],
                 ),
@@ -56,17 +54,17 @@ class _HeaderState extends State<HeaderProductDetail> {
   _buildIconback() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.1),
+        color: Color.fromARGB(255, 179, 179, 179),
         borderRadius: BorderRadius.circular(50),
         border: Border.all(color: Colors.white),
       ),
       child: Padding(
-        padding: EdgeInsets.all(0),
-        child: IconButton(
-          onPressed: () {
+        padding: EdgeInsets.all(10),
+        child: InkWell(
+          onTap: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          child: Icon(
             Icons.arrow_back,
             color: Colors.white,
             size: 28,
@@ -79,7 +77,7 @@ class _HeaderState extends State<HeaderProductDetail> {
   _buildCartButton() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.1),
+        color: Color.fromARGB(255, 179, 179, 179),
         borderRadius: BorderRadius.circular(50),
         border: Border.all(color: Colors.white),
       ),
@@ -89,7 +87,7 @@ class _HeaderState extends State<HeaderProductDetail> {
               context, MaterialPageRoute(builder: (context) => CartScreen()));
         },
         child: Padding(
-          padding: EdgeInsets.all(11),
+          padding: EdgeInsets.all(10),
           child: badges.Badge(
             badgeContent: Text('0', style: TextStyle(color: Colors.white)),
             child: Icon(Icons.shopping_cart, color: _colorIcon, size: 28),
@@ -120,7 +118,7 @@ class _HeaderState extends State<HeaderProductDetail> {
         _offset = 0.0;
         _opacity = 0.0;
       } else {
-        _colorIcon = primaryColors;
+        _colorIcon = Colors.white;
       }
 
       _backgroundColor = Colors.transparent;

@@ -67,26 +67,6 @@ class _ProductCartState extends State<ProductCart> {
                   return InFrame(product: product!);
                 },
               );
-
-              // return Consumer<ProductProvider>(
-              //     builder: (context, value, child) {
-              //   final products = value.products;
-              //   return GridView.builder(
-              //     shrinkWrap: true,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2,
-              //       crossAxisSpacing: 0,
-              //       mainAxisSpacing: 0,
-              //       mainAxisExtent: 330,
-              //     ),
-              //     itemCount: products.length,
-              //     itemBuilder: (context, index) {
-              //       final product = products[index];
-              //       return InFrame(product: product);
-              //     },
-              //   );
-              // });
             },
           ),
         ),

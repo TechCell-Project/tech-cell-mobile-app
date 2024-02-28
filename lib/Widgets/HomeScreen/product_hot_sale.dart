@@ -69,29 +69,6 @@ class _ProductHotSaleState extends State<ProductHotSale> {
                   },
                 ),
               );
-              // return Consumer<ProductProvider>(
-              //   builder: (context, value, child) {
-              //     final products = value.products;
-              //     return SizedBox(
-              //       height: 320,
-              //       child: ListView.builder(
-              //         shrinkWrap: true,
-              //         scrollDirection: Axis.horizontal,
-              //         itemCount: products.length = 4,
-              //         itemBuilder: (context, index) {
-              //           final product = products[index];
-              //           return Padding(
-              //             padding: EdgeInsets.symmetric(horizontal: 1),
-              //             child: Container(
-              //               width: 200,
-              //               child: InFrame(product: product),
-              //             ),
-              //           );
-              //         },
-              //       ),
-              //     );
-              //   },
-              // );
             },
           ),
         ),
