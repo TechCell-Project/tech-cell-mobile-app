@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_app/Widgets/HomeScreen/banner_slider.dart';
 import 'package:my_app/Widgets/HomeScreen/category.dart';
 import 'package:my_app/Widgets/HomeScreen/header_home.dart';
@@ -7,14 +8,20 @@ import 'package:my_app/Widgets/HomeScreen/product_hot_sale.dart';
 import 'package:my_app/Widgets/HomeScreen/title_with_more_btn.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _scrollController = TrackingScrollController();
+  final ScrollController scrollController = ScrollController();
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   scrollController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +29,19 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            controller: _scrollController,
+            controller: scrollController,
             child: Column(
               children: [
                 BannerSlider(),
                 Category(),
-                TitleWithMoreBtn(text: 'Sản phẩm nổi bật'),
+                TitleWithMoreBtn(text: 'Sản phẩm nổi bật:'),
                 ProductHotSale(),
-                SizedBox(height: 15),
-                TitleWithMoreBtn(text: 'SẢN PHẨM MỚI '),
-                ProductCart(),
-                SizedBox(height: 5),
+                TitleWithMoreBtn(text: 'Gợi ý cho bạn:'),
+                ProductCart(scrollController),
               ],
             ),
           ),
-          HeaderHome(_scrollController),
+          HeaderHome(scrollController),
         ],
       ),
     );

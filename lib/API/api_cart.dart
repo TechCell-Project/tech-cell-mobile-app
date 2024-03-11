@@ -27,9 +27,7 @@ class CartApi {
         var newAccessToken = await AuthLogin.getAccessToken();
         accessToken = newAccessToken!;
       }
-      var headers = {
-        'Authorization': 'Bearer $accessToken',
-      };
+
       http.Response res = await http.get(
         Uri.parse('${uri}carts'),
         headers: {
@@ -64,10 +62,7 @@ class CartApi {
         final newAccessToken = await AuthLogin.getAccessToken();
         accessToken = newAccessToken!;
       }
-      var headers = {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json; charset=UTF-8',
-      };
+
       http.Response res = await http.post(
         Uri.parse('${uri}carts'),
         body: jsonEncode(
