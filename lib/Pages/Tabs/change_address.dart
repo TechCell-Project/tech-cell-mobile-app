@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/API/api_address_user.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Address/switch_defaul_address.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/address_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/validator.dart';
@@ -410,20 +411,7 @@ class _ChangeAddressState extends State<ChangeAddress> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: ElevatedButton(
-                  onPressed: updateAddressUser,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(55),
-                    backgroundColor: primaryColors,
-                  ),
-                  child: const Text(
-                    'Hoàn Thành',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
+              ButtonSendrequest(text: 'Hoàn thành', submit: updateAddressUser)
             ],
           ),
         ),
