@@ -5,12 +5,13 @@ import 'package:my_app/models/product_model.dart';
 
 class ProductAPI {
   var data = [];
-  List<ProductModel> result = [];
-  String url = 'https://api.techcell.cloud/products?select_type=only_active';
 
   Future<List<ProductModel>> getAllProducts({String? query}) async {
+    final url = 'https://api.techcell.cloud/products?select_type=only_active';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
+
+    List<ProductModel> result = [];
 
     try {
       if (response.statusCode == 200) {
@@ -23,28 +24,31 @@ class ProductAPI {
                   element.name.toLowerCase().contains(query.toLowerCase()))
               .toList();
         }
-        // final String jsonBody = response.body;
-        // final List productList = json.decode(jsonBody)['data'];
-
-        // if (query != null) {
-        //   productList
-        //       .where((element) =>
-        //           element['name'].toLowerCase().contains((query.toLowerCase())))
-        //       .toList();
-        // }
-
-        // return productList
-        //     .map((contactRaw) => ProductModel.fromJson(contactRaw))
-        //     .toList();
       } else {
-        // Handle HTTP error status codes if needed
         print('HTTP Error: ${response.statusCode}');
       }
     } on Exception catch (error) {
-      // Handle other types of errors (e.g., network error)
       print('Error: $error');
     }
+    return result;
+  }
 
-    return result; // Return an empty list in case of errors
+  static Future<List<ProductModel>> getProductsByQuantity(
+      int page, int pageSize) async {
+    final url = 'https://api.techcell.cloud/products?page=' +
+        page.toString() +
+        '&pageSize=$pageSize&select_type=only_active';
+    print(url);
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body)['data'] as List<dynamic>;
+      final fetchedProducts =
+          jsonData.map((e) => ProductModel.fromJson(e)).toList();
+      return fetchedProducts;
+    } else {
+      throw Exception('Failed to load products: ${response.statusCode}');
+    }
   }
 }

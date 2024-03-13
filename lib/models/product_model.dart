@@ -129,7 +129,7 @@ class Variation {
 
 class Price {
   final int base;
-  final int sale;
+  final int? sale;
   final int special;
 
   Price({

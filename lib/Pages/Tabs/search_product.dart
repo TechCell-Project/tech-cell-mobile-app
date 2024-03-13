@@ -40,69 +40,70 @@ class SearchProduct extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(244, 244, 244, 1)),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: FutureBuilder<List<ProductModel>>(
-            future: ProductAPI().getAllProducts(query: query),
-            builder: (context, snapshot) {
-              if ((snapshot.hasError) || (!snapshot.hasData))
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: FutureBuilder<List<ProductModel>>(
+          future: ProductAPI().getAllProducts(query: query),
+          builder: (context, snapshot) {
+            if (snapshot.hasError || !snapshot.hasData)
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
 
-              if (snapshot.data == null) {
-                return Center(
-                  child: Text('No Data!'),
-                );
-              }
+            if (snapshot.data == null) {
+              return Center(
+                child: Text('No Data!'),
+              );
+            }
 
-              if (snapshot.data!.isEmpty) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 100,
-                      child: Center(
-                        child: Text(
-                          'Sản phẩm không tồn tại!',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
+            if (snapshot.data!.isEmpty) {
+              return Column(
+                children: [
+                  Container(
+                    height: 150,
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        'Sản phẩm không tồn tại!',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-                    Container(
-                      height: 470,
-                      width: 400,
-                      child: Image.asset(
-                        'assets/images/data_empty.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                  ),
+                  Container(
+                    height: 250,
+                    width: 400,
+                    color: Colors.white,
+                    child: Image.asset(
+                      'assets/images/data_empty.jpg',
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                );
-              }
-              List<ProductModel>? products = snapshot.data;
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 0,
-                  mainAxisExtent: 320,
-                ),
-                itemCount: products?.length,
-                itemBuilder: (context, index) {
-                  final product = products?[index];
-                  return InFrame(product: product!);
-                },
+                  ),
+                ],
               );
-            },
-          ),
+            }
+
+            List<ProductModel>? products = snapshot.data;
+
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
+                mainAxisExtent: 320,
+              ),
+              itemCount: products?.length,
+              itemBuilder: (context, index) {
+                final product = products?[index];
+                return InFrame(product: product!);
+              },
+            );
+          },
         ),
       ),
     );
@@ -110,23 +111,25 @@ class SearchProduct extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 470,
-              width: 400,
-              child: Image.asset(
-                'assets/images/search.jpg',
-                fit: BoxFit.cover,
+    return Container(
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Container(
+                height: 470,
+                width: 400,
+                child: Image.asset(
+                  'assets/images/search.jpg',
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
