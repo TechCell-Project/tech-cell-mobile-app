@@ -64,7 +64,7 @@ class _InFrameState extends State<InFrame> {
               SizedBox(height: 5),
               Text(
                 '${widget.product.name}',
-                maxLines: 2,
+                maxLines: 1,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,

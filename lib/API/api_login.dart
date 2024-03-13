@@ -44,6 +44,10 @@ class AuthLogin {
               json.decode(res.body)['accessToken']);
           await TokenManager.setRefreshToken(
               json.decode(res.body)['refreshToken']);
+          await TokenManager.saveUserToStorage(
+              json.decode(res.body)['userName'],
+              json.decode(res.body)['firstName'],
+              json.decode(res.body)['lastName']);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const MainScreen()),
               (route) => false);
@@ -108,8 +112,41 @@ class AuthLogin {
       // if (idToken == null) return;
       print('ggAUTH:: ${googleAuth.toString()}');
       print('idToken:: ${googleAuth.idToken}');
+      sendIdTokenToServer(context, idToken: '${googleAuth.idToken}');
     } catch (e) {
       showSnackBarError(context, 'loi 1111111');
+    }
+  }
+
+  void sendIdTokenToServer(BuildContext context,
+      {required String idToken}) async {
+    try {
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      http.Response res =
+          await http.post(Uri.parse('${uri}auth/google'), body: {
+        "idToken": idToken,
+      });
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          userProvider.setUser(res.body);
+          await TokenManager.setAccessToken(
+              json.decode(res.body)['accessToken']);
+          await TokenManager.setRefreshToken(
+              json.decode(res.body)['refreshToken']);
+          await TokenManager.saveUserToStorage(
+              json.decode(res.body)['userName'],
+              json.decode(res.body)['firstName'],
+              json.decode(res.body)['lastName']);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const MainScreen()),
+              (route) => false);
+        },
+      );
+    } catch (e) {
+      print(e);
     }
   }
 

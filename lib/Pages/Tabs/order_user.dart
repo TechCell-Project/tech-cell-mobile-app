@@ -3,9 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_order.dart';
 import 'package:my_app/Pages/Tabs/order_detail.dart';
+import 'package:my_app/Providers/product_provider.dart';
+import 'package:my_app/models/cart_model.dart';
 import 'package:my_app/models/order_model.dart';
+import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
-import 'package:my_app/utils/snackbar.dart';
+import 'package:provider/provider.dart';
 
 class OrderUserTap extends StatefulWidget {
   const OrderUserTap({super.key});
@@ -14,7 +17,9 @@ class OrderUserTap extends StatefulWidget {
   State<OrderUserTap> createState() => _OrderUserTapState();
 }
 
-class _OrderUserTapState extends State<OrderUserTap> {
+class _OrderUserTapState extends State<OrderUserTap>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   ScrollController _scrollController = ScrollController();
   OrderResponse orderUser = OrderResponse(
     data: [],
@@ -23,272 +28,565 @@ class _OrderUserTapState extends State<OrderUserTap> {
     totalPage: 1,
     totalRecord: 1,
   );
-  String status = '';
+  CartModel productCart = CartModel(
+    id: '',
+    userId: '',
+    cartCountProduct: 0,
+    product: [],
+    cartState: '',
+  );
+  Map<String, OrderResponse> orderData = {
+    'pending': OrderResponse(
+        page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
+    'cancelled': OrderResponse(
+        page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
+    'processing': OrderResponse(
+        page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
+    'shipping': OrderResponse(
+        page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
+    'completed': OrderResponse(
+        page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
+  };
+  Future<void> fetchDataForOrders() async {
+    for (var entry in orderData.entries) {
+      try {
+        OrderResponse orders =
+            await OrderApi().getOrderUser(context, entry.key);
 
-  Future<void> getOderUser() async {
-    try {
-      OrderResponse orderdata = await OrderApi().getOrderUser(context);
-      setState(() {
-        orderUser = orderdata;
-      });
-    } catch (e) {
-      showSnackBarError(context, e.toString());
+        setState(() {
+          orderData[entry.key] = orders;
+        });
+      } catch (e) {
+        print('Error fetching data for ${entry.key}: $e');
+      }
     }
   }
 
   int getTotalQuantity(int index) {
-    int total = orderUser.data[index].product.length;
+    if (orderUser.data.isEmpty) {
+      return 1;
+    }
+    int total = orderData[index]!.data[index].product.length;
+    // int total = orderUser.data[index].product.length;
+
     return total;
   }
 
   int getTotalOrder() {
-    int total = orderUser.data.length;
+    int total = orderData.length;
+    // int total = orderUser.data.length;
     return total;
   }
 
-  void scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {}
+  _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      setState(() {});
+    }
   }
 
   @override
   void initState() {
+    _tabController = TabController(length: 5, initialIndex: 0, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+    fetchDataForOrders();
     super.initState();
-    getOderUser();
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Đơn hàng của bạn',
-          style: TextStyle(color: Colors.black),
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Đơn hàng của bạn',
+            style: TextStyle(color: Colors.black),
+          ),
+          foregroundColor: primaryColors,
+          elevation: 0,
+          backgroundColor: Colors.white,
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: primaryColors,
+            unselectedLabelColor: Colors.black.withOpacity(0.5),
+            isScrollable: true,
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 3, color: primaryColors),
+            ),
+            labelPadding: EdgeInsets.symmetric(horizontal: 20),
+            tabs: [
+              Tab(text: 'Chờ xác nhận'),
+              Tab(text: 'Chờ lấy hàng'),
+              Tab(text: 'Chờ giao hàng'),
+              Tab(text: 'Đã giao'),
+              Tab(text: 'Đã hủy'),
+            ],
+          ),
         ),
-        foregroundColor: primaryColors,
-        elevation: 0,
-        backgroundColor: Colors.white,
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            buildOrderWidget(orderData['pending']),
+            buildOrderWidget(orderData['processing']),
+            buildOrderWidget(orderData['shipping']),
+            buildOrderWidget(orderData['completed']),
+            buildOrderWidget(orderData['cancelled']),
+          ],
+        ),
       ),
-      body: SingleChildScrollView(
+    );
+  }
+
+  Widget buildOrderWidget(OrderResponse? orders) {
+    List<ProductModel> productProvider =
+        Provider.of<ProductProvider>(context, listen: false).products;
+    if (orders == null || orders.data.isEmpty) {
+      return Center(child: Text('No orders found'));
+    } else {
+      return SingleChildScrollView(
         child: Container(
           color: const Color.fromARGB(255, 231, 231, 231),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Container(
-                  height: 70,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
+          child: Column(
+            children: [
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: orders.data.length,
+                itemBuilder: ((context, index) {
+                  return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              getTotalOrder().toString(),
-                              style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Text('Đơn hàng'),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 50,
-                          child: VerticalDivider(
-                            color: Colors.grey,
-                            thickness: 1,
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderDetail(
+                                      orderUser: orders.data[index])));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
                           ),
-                        ),
-                        const Column(
-                          children: [
-                            Text(
-                              '0đ',
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Icon(Icons.store),
+                                      Text('Techcell'),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  getOrderStatus(
+                                      orders.data[index].oderStatus,
+                                      _getStatusText(
+                                          orders.data[index].oderStatus)),
+                                ],
                               ),
-                            ),
-                            Text('Tổng tiền'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: orderUser.data.length,
-                  itemBuilder: ((context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OrderDetail(
-                                        orderUser: orderUser.data[index])));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Row(
-                                      children: [
-                                        Icon(Icons.store),
-                                        Text('Techcell'),
-                                      ],
+                              ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: orders.data[index].product.length =
+                                    1,
+                                itemBuilder: (context, indexFirst) {
+                                  final itemCart =
+                                      orders.data[index].product[indexFirst];
+                                  return Container(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: productProvider.length,
+                                      itemBuilder: (context, indexSecond) {
+                                        final itemProduct =
+                                            productProvider[indexSecond];
+                                        if (itemCart.productId ==
+                                            itemProduct.id) {
+                                          return Container(
+                                            width: 400,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 20),
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemCount: itemProduct
+                                                        .variations.length,
+                                                    itemBuilder:
+                                                        (context, indexThird) {
+                                                      final variation =
+                                                          itemProduct
+                                                                  .variations[
+                                                              indexThird];
+
+                                                      if (itemCart.sku ==
+                                                          variation.sku) {
+                                                        return Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 120,
+                                                              width: 120,
+                                                              child: ListView
+                                                                  .builder(
+                                                                scrollDirection:
+                                                                    Axis.horizontal,
+                                                                itemCount:
+                                                                    variation
+                                                                        .images
+                                                                        .length,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  final image =
+                                                                      variation
+                                                                              .images[
+                                                                          index];
+                                                                  if (image
+                                                                          .isThumbnail ==
+                                                                      true) {
+                                                                    return Image(
+                                                                      image: NetworkImage(
+                                                                          '${image.url}'),
+                                                                    );
+                                                                  } else if (index ==
+                                                                      0) {
+                                                                    return Image(
+                                                                      image: NetworkImage(
+                                                                          '${image.url}'),
+                                                                    );
+                                                                  }
+                                                                  return Container();
+                                                                },
+                                                              ),
+                                                            ),
+
+                                                            // SizedBox(width: 10),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  width: 200,
+                                                                  child: Text(
+                                                                    '${itemProduct.name}',
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 5),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                        'Phân loại:'),
+                                                                    Container(
+                                                                      height:
+                                                                          15, // Adjust the height as needed
+                                                                      width:
+                                                                          150,
+                                                                      child: ListView
+                                                                          .builder(
+                                                                        scrollDirection:
+                                                                            Axis.horizontal,
+                                                                        itemCount: variation
+                                                                            .attributes
+                                                                            .length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          final attribute =
+                                                                              variation.attributes[index];
+                                                                          return Text(
+                                                                            ' ${attribute.v.toUpperCase()}${attribute.u ?? ''}',
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 5),
+                                                                if (variation
+                                                                            .price
+                                                                            .sale !=
+                                                                        variation
+                                                                            .price
+                                                                            .base &&
+                                                                    variation
+                                                                            .price
+                                                                            .sale !=
+                                                                        0)
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        '${formatCurrency.format(variation.price.sale)}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.red,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              5),
+                                                                      Text(
+                                                                        '-',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .withOpacity(1),
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              5),
+                                                                      Text(
+                                                                        '${formatCurrency.format(variation.price.base)}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .withOpacity(1),
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                else if (variation
+                                                                        .price
+                                                                        .special !=
+                                                                    0)
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        '${formatCurrency.format(variation.price.special)}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.red,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              5),
+                                                                      Text(
+                                                                        '-',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .withOpacity(1),
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              5),
+                                                                      Text(
+                                                                        '${formatCurrency.format(variation.price.base)}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .withOpacity(1),
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                else
+                                                                  Text(
+                                                                    '${formatCurrency.format(variation.price.base)}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .red,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          16,
+                                                                    ),
+                                                                  ),
+                                                                SizedBox(
+                                                                    height: 5),
+                                                                Text(
+                                                                  'Số lượng: ${itemCart.quantity.toString()}',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }
+                                                      return Container();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                        return Container();
+                                      },
                                     ),
-                                    const Spacer(),
-                                    getOrderStatus(index),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 218, 218, 218))),
-                                      child: const Image(
-                                        image: AssetImage(
-                                            'assets/images/galaxy-z-fold-5-xanh-1.png'),
-                                        fit: BoxFit.cover,
-                                      ),
+                                  );
+                                },
+                              ),
+                              const Divider(
+                                thickness: 1,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${orders.data[index].product.length.toString()} sản phẩm",
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  const Spacer(),
+                                  const Image(
+                                    image: AssetImage(
+                                      'assets/logos/favicon.ico',
                                     ),
-                                    SizedBox(
-                                      width: 100,
-                                      child: Text(
-                                        orderUser.data[index].product[0].sku,
-                                        maxLines: 2,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      "x${orderUser.data[index].product[0].quantity.toString()}",
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ],
-                                ),
-                                const Divider(
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "${getTotalQuantity(index).toString()} sản phẩm",
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    ),
-                                    const Spacer(),
-                                    const Image(
-                                      image: AssetImage(
-                                        'assets/logos/favicon.ico',
-                                      ),
-                                      width: 20,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Text("Thành tiền: "),
-                                    Text(
-                                      orderUser
-                                          .data[index].checkoutOrder.totalPrice
-                                          .toString(),
-                                      style: const TextStyle(
-                                          color: primaryColors, fontSize: 16),
-                                    )
-                                  ],
-                                ),
-                                const Divider(thickness: 1),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: primaryColors),
-                                        onPressed: () {},
-                                        child: const Text('Mua lại')),
-                                  ],
-                                )
-                              ],
-                            ),
-                          )),
-                    );
-                  }),
-                ),
-              ],
-            ),
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  const Text("Thành tiền: "),
+                                  Text(
+                                    ' ${formatCurrency.format(orders.data[index].checkoutOrder.totalPrice)}',
+                                    style: const TextStyle(
+                                        color: primaryColors, fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                  );
+                }),
+              ),
+            ],
           ),
         ),
-      ),
+      );
+    }
+  }
+
+  Widget styleOrderStatus(Color color, String text) {
+    return Row(
+      children: [
+        Icon(Icons.local_shipping_outlined, color: color),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: TextStyle(fontSize: 15, color: color),
+        ),
+      ],
     );
   }
 
-  Widget styleOrderStatus(Color? color, String text) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: const BorderRadius.all(Radius.circular(15))),
-      child: Row(
-        children: [
-          const Icon(Icons.local_shipping_outlined),
-          const SizedBox(width: 5),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getOrderStatus(int index) {
+  Widget getOrderStatus(String status, String text) {
+    Color statusColor;
+    switch (status) {
+      case 'pending':
+        statusColor = Colors.yellow[800] ?? Colors.transparent;
+        break;
+      case 'completed':
+        statusColor = Colors.green;
+        break;
+      case 'cancelled':
+        statusColor = Colors.red;
+      default:
+        statusColor = Colors.transparent;
+        break;
+    }
     return Container(
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            if (orderUser.data[index].oderStatus == 'pending')
-              styleOrderStatus(Colors.yellow[300], 'Đang chờ xác nhận')
-            else if (orderUser.data[index].oderStatus == 'completed')
-              styleOrderStatus(Colors.green, 'Đã hoàn thành')
+            styleOrderStatus(statusColor, _getStatusText(status)),
           ],
         ));
   }
 
-  Widget getMethodPayment(int index) {
-    return Row(
-      children: [
-        if (orderUser.data[index].paymentOrder.method == 'COD')
-          const Text('Thanh toán khi nhận hàng')
-        else
-          Text("Thanh toán qua ${orderUser.data[index].paymentOrder.method}"),
-      ],
-    );
+  String _getStatusText(String status) {
+    switch (status) {
+      case 'pending':
+        return 'Đang chờ xác nhận';
+      case 'completed':
+        return 'Đã hoàn thành';
+      case 'cancelled':
+        return 'Đơn hàng đã hủy';
+      default:
+        return 'Đang chờ xử lý';
+    }
   }
 }

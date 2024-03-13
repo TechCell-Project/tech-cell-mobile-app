@@ -20,7 +20,7 @@ class ButtonSendrequest extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
   }

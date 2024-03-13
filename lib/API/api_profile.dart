@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Providers/token_manager.dart';
 import 'package:my_app/Providers/user_provider.dart';
-import 'package:my_app/models/user_models.dart';
+import 'package:my_app/models/user_model.dart';
 
 import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/snackbar.dart';

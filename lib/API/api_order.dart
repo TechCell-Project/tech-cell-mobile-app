@@ -105,7 +105,8 @@ class OrderApi {
     }
   }
 
-  Future<OrderResponse> getOrderUser(BuildContext context) async {
+  Future<OrderResponse> getOrderUser(
+      BuildContext context, String orderStatus) async {
     OrderResponse orederResPonse = OrderResponse(
         page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []);
     var userId = Provider.of<UserProvider>(context, listen: false).user.id;
@@ -117,7 +118,7 @@ class OrderApi {
         accessToken = newAccessToken!;
       }
       http.Response res = await http.get(
-        Uri.parse('${uri}orders-mnt?page=1&pageSize=4&userId=$userId'),
+        Uri.parse('${uri}orders-mnt?userId=$userId&orderStatus=$orderStatus'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -133,8 +134,33 @@ class OrderApi {
         },
       );
     } catch (e) {
-      showSnackBarError(context, e.toString());
+      // showSnackBarError(context, e.toString());
     }
     return orederResPonse;
+  }
+
+  Future cancelOrder(BuildContext context, {required String orderId}) async {
+    try {
+      var accessToken =
+          Provider.of<UserProvider>(context, listen: false).user.accessToken;
+      if (accessToken.isEmpty) {
+        final newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
+      http.Response res =
+          await http.patch(Uri.parse('${uri}orders-mnt/$orderId'), headers: {
+        'Authorization': 'Bearer $accessToken',
+      }, body: {
+        "orderStatus": "cancelled"
+      });
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          Navigator.pop(context);
+          showSnackBarSuccess(context, 'Thanh cong');
+        },
+      );
+    } catch (e) {}
   }
 }

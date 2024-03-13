@@ -52,7 +52,7 @@ void showSnackBarSuccess(BuildContext context, String text) {
     SnackBar(
       content: Container(
         padding: const EdgeInsets.all(8),
-        height: 60,
+        height: 100,
         decoration: const BoxDecoration(
           color: Colors.green,
           borderRadius: BorderRadius.all(
