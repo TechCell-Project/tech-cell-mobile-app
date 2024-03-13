@@ -28,6 +28,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
   int getCartTotal() {
     int total = widget.orderResponse.totalPrice +
         widget.orderResponse.shipping.giaohangnhanh.serviceFee;
+    formatCurrency.format(total);
     return total;
   }
 
@@ -99,7 +100,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(bottom: 10),
         child: ButtonInAddress(
-          textInAddress: 'Thanh toan',
+          textInAddress: 'Thanh toán',
           functionAddress: createOder,
         ),
       ),
@@ -292,7 +293,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            "Tổng so hang",
+                            "Tổng số hàng",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -326,7 +327,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "${widget.orderResponse.totalPrice}",
+                            "${formatCurrency.format(widget.orderResponse.totalPrice)}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -352,7 +353,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "${widget.orderResponse.shipping.giaohangnhanh.total}",
+                            "${formatCurrency.format(widget.orderResponse.shipping.giaohangnhanh.total)}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -378,7 +379,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            getCartTotal().toString(),
+                            formatCurrency.format(getCartTotal()),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

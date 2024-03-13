@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
 import 'package:my_app/Pages/Tabs/user_profile.dart';
+import 'package:my_app/Providers/token_manager.dart';
+import 'package:my_app/models/user_model.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -14,8 +15,8 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<String?>(
-        future: AuthLogin.getAccessToken(),
+      body: FutureBuilder<User?>(
+        future: TokenManager.getUserfromStorage(),
         builder: (context, snapshoot) {
           if (snapshoot.data == null) {
             return LoginTap();

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
+import 'package:my_app/API/api_profile.dart';
+import 'package:my_app/Providers/token_manager.dart';
 
 import 'package:my_app/Providers/user_provider.dart';
+import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/Widgets/SettingScreen/setting_title.dart';
 import 'package:my_app/models/setting.dart';
-import 'package:my_app/models/user_models.dart';
+import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +21,20 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   void signOutUser(BuildContext context) {
     AuthLogin().signOut(context);
+  }
+
+  @override
+  void initState() {
+    ProfileUser().getProfileUser(context);
+    TokenManager.getUserfromStorage();
+    super.initState();
+    _refreshData();
+  }
+
+  Future<void> _refreshData() async {
+    await ProfileUser().getProfileUser(context);
+    TokenManager.getUserfromStorage();
+    return Future.delayed(Duration(seconds: 4));
   }
 
   @override
@@ -108,20 +125,8 @@ class _UserProfileState extends State<UserProfile> {
                               ))),
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () => signOutUser(context),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(55),
-                    backgroundColor: primaryColors,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text(
-                    'Đăng Xuất',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
+                ButtonSendrequest(
+                    text: 'Đăng xuất', submit: () => signOutUser(context))
               ],
             ),
           ),
