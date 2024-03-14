@@ -129,7 +129,7 @@ class Variation {
 
 class Price {
   final int base;
-  final int sale;
+  final int? sale;
   final int special;
 
   Price({
@@ -140,7 +140,7 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) => Price(
         base: json["base"],
-        sale: json["sale"],
+        sale: json["sale"] ?? 0,
         special: json["special"],
       );
 }

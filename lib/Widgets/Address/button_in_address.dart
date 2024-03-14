@@ -11,16 +11,18 @@ class ButtonInAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 5, right: 5),
       child: ElevatedButton(
         onPressed: functionAddress,
         style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(55),
           backgroundColor: primaryColors,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
         child: Text(
           textInAddress,
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );

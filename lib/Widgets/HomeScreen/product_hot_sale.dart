@@ -27,73 +27,52 @@ class _ProductHotSaleState extends State<ProductHotSale> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(244, 244, 244, 1)),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          child: FutureBuilder<List<ProductModel>>(
-            future: ProductAPI().getAllProducts(),
-            builder: (context, snapshot) {
-              if ((snapshot.hasError) || (!snapshot.hasData)) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-
-              if (snapshot.data == null) {
-                return Center(
-                  child: Text('No Data!'),
-                );
-              }
-
-              if (snapshot.data!.isEmpty) {
-                return Center(
-                  child: Text('Data Empty!'),
-                );
-              }
-
-              List<ProductModel>? products = snapshot.data;
+        decoration: BoxDecoration(color: Color.fromRGBO(230, 230, 230, 1)),
+        child: FutureBuilder<List<ProductModel>>(
+          future: ProductAPI().getAllProducts(),
+          builder: (context, snapshot) {
+            if ((snapshot.hasError) || (!snapshot.hasData)) {
               return Container(
-                height: 320,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            if (snapshot.data == null) {
+              return Center(
+                child: Text('No Data!'),
+              );
+            }
+
+            if (snapshot.data!.isEmpty) {
+              return Center(
+                child: Text('Data Empty!'),
+              );
+            }
+
+            List<ProductModel>? products = snapshot.data;
+            return SizedBox(
+              height: 325,
+              child: Padding(
+                padding: EdgeInsets.all(5),
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: products?.length,
+                  itemCount: (products != null && products.length >= 5)
+                      ? 5
+                      : products?.length ?? 0,
                   itemBuilder: (context, index) {
-                    final product = products?[index];
+                    final product = products![products.length - index - 1];
                     return Container(
-                      width: 200,
-                      child: InFrame(product: product!),
+                      width: 180,
+                      child: InFrame(product: product),
                     );
                   },
                 ),
-              );
-              // return Consumer<ProductProvider>(
-              //   builder: (context, value, child) {
-              //     final products = value.products;
-              //     return SizedBox(
-              //       height: 320,
-              //       child: ListView.builder(
-              //         shrinkWrap: true,
-              //         scrollDirection: Axis.horizontal,
-              //         itemCount: products.length = 4,
-              //         itemBuilder: (context, index) {
-              //           final product = products[index];
-              //           return Padding(
-              //             padding: EdgeInsets.symmetric(horizontal: 1),
-              //             child: Container(
-              //               width: 200,
-              //               child: InFrame(product: product),
-              //             ),
-              //           );
-              //         },
-              //       ),
-              //     );
-              //   },
-              // );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
