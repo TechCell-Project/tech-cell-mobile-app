@@ -4,8 +4,8 @@ import 'package:my_app/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 
 class HeaderProductDetail extends StatefulWidget {
+  final ScrollController scrollController;
   HeaderProductDetail(this.scrollController);
-  final TrackingScrollController scrollController;
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -16,88 +16,7 @@ class _HeaderState extends State<HeaderProductDetail> {
   late Color _colorIcon;
   late double _opacity;
   late double _offset;
-
   final _opacityMax = 0.01;
-
-  @override
-  void initState() {
-    _backgroundColor = Colors.transparent;
-    _colorIcon = Colors.white;
-    _opacity = 0.0;
-    _offset = 0.0;
-    widget.scrollController.addListener(_onScroll);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.scrollController.offset <= -50
-        ? SizedBox()
-        : Container(
-            color: _backgroundColor,
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildIconback(),
-                    SizedBox(width: 15),
-                    _buildCartButton(),
-                  ],
-                ),
-              ),
-            ),
-          );
-  }
-
-  _buildIconback() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: Colors.white),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(0),
-        child: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-            size: 28,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildCartButton() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: Colors.white),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CartScreen()));
-        },
-        child: Padding(
-          padding: EdgeInsets.all(11),
-          child: badges.Badge(
-            badgeContent: Text('0', style: TextStyle(color: Colors.white)),
-            child: Icon(Icons.shopping_cart, color: _colorIcon, size: 28),
-          ),
-        ),
-      ),
-    );
-  }
 
   _onScroll() {
     final scrollOffset = widget.scrollController.offset;
@@ -125,5 +44,84 @@ class _HeaderState extends State<HeaderProductDetail> {
 
       _backgroundColor = Colors.transparent;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _backgroundColor = Colors.transparent;
+    _colorIcon = Colors.white;
+    _opacity = 0.0;
+    _offset = 0.0;
+    widget.scrollController.addListener(_onScroll);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.scrollController.offset <= -50
+        ? SizedBox()
+        : Container(
+            color: _backgroundColor,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildIconback(),
+                    _buildCartButton(),
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
+
+  Widget _buildIconback() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 190, 190, 190),
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Colors.white),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(0),
+        child: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCartButton() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 190, 190, 190),
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Colors.white),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CartScreen()));
+        },
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: badges.Badge(
+            badgeContent: Text('0', style: TextStyle(color: Colors.white)),
+            child: Icon(Icons.shopping_cart, color: _colorIcon, size: 30),
+          ),
+        ),
+      ),
+    );
   }
 }

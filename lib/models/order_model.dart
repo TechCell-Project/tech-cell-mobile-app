@@ -55,6 +55,8 @@ class OrderUser {
   PaymentOrder paymentOrder;
   String trackingCode;
   String oderStatus;
+  String createdAt;
+  String updatedAt;
   OrderUser({
     required this.id,
     required this.product,
@@ -64,6 +66,8 @@ class OrderUser {
     required this.paymentOrder,
     required this.trackingCode,
     required this.oderStatus,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -76,6 +80,8 @@ class OrderUser {
       'paymentOrder': paymentOrder.toMap(),
       'trackingCode': trackingCode,
       'orderStatus': oderStatus,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 
@@ -90,6 +96,8 @@ class OrderUser {
       paymentOrder: PaymentOrder.fromMap(map['paymentOrder']),
       trackingCode: map['trackingCode'],
       oderStatus: map['orderStatus'],
+      createdAt: map['createdAt'] ?? '',
+      updatedAt: map['updatedAt'] ?? '',
     );
   }
 
@@ -137,15 +145,15 @@ class ShippingOrder {
   ShippingOrder({required this.toAddress});
 
   Map<String, dynamic> toMap() {
-    return <String, AddressModel>{
-      'toAddress': toAddress.toMap(),
+    return <String, dynamic>{
+      'toAddress': toAddress.toJson(),
     };
   }
 
   factory ShippingOrder.fromMap(Map<String, dynamic> map) {
     return ShippingOrder(
-      toAddress: map['address'] != null
-          ? AddressModel.fromMap(map['address'])
+      toAddress: map['shippingOrder'] != null
+          ? AddressModel.fromMap(map['shippingOrder'])
           : AddressModel(
               addressName: '',
               customerName: '',
@@ -154,7 +162,8 @@ class ShippingOrder {
               districtLevel: DistrictLevel(district_id: 0, district_name: ''),
               wardLevel: WardLevel(wardCode: '', wardName: ''),
               detail: '',
-              isDefault: true),
+              isDefault: true,
+            ),
     );
   }
 

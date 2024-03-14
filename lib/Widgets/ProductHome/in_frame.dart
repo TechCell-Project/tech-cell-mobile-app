@@ -22,7 +22,7 @@ class _InFrameState extends State<InFrame> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetail(producdetail: widget.product),
+            builder: (context) => ProductDetail(productDetail: widget.product),
           ),
         );
       },
@@ -35,7 +35,7 @@ class _InFrameState extends State<InFrame> {
         child: Padding(
           padding: EdgeInsets.all(5),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 child: ListView.builder(
@@ -64,7 +64,7 @@ class _InFrameState extends State<InFrame> {
               SizedBox(height: 5),
               Text(
                 '${widget.product.name}',
-                maxLines: 2,
+                maxLines: 1,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -76,7 +76,7 @@ class _InFrameState extends State<InFrame> {
               Container(
                 child: ListView.builder(
                   shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: widget.product.variations.length,
                   itemBuilder: (context, index) {
                     final variation = widget.product.variations[index];
@@ -87,9 +87,9 @@ class _InFrameState extends State<InFrame> {
                           Column(
                             children: [
                               Text(
-                                '${formatCurrency.format(variation.price.sale)}',
+                                '${formatCurrency.format(variation.price.special)}',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: primaryColors,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 15,
                                 ),

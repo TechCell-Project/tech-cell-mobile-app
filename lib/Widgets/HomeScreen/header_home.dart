@@ -5,8 +5,8 @@ import 'package:my_app/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 
 class HeaderHome extends StatefulWidget {
+  final ScrollController scrollController;
   HeaderHome(this.scrollController);
-  final TrackingScrollController scrollController;
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -14,18 +14,43 @@ class HeaderHome extends StatefulWidget {
 
 class _HeaderState extends State<HeaderHome> {
   late Color _backgroundColor;
-  // late Color _backgroundColorSearch;
   late Color _colorIcon;
   late double _opacity;
   late double _offset;
-
   final _opacityMax = 0.01;
+
+  _onScroll() {
+    final scrollOffset = widget.scrollController.offset;
+    if (scrollOffset >= _offset && scrollOffset > 5) {
+      _opacity = double.parse((_opacity + _opacityMax).toStringAsFixed(2));
+      if (_opacity >= 1.0) {
+        _opacity = 1.0;
+      }
+      _offset = scrollOffset;
+    } else if (scrollOffset < 100) {
+      _opacity = double.parse((_opacity - _opacityMax).toStringAsFixed(2));
+      if (_opacity <= 0.0) {
+        _opacity = 0.0;
+      }
+    }
+
+    setState(() {
+      if (scrollOffset <= 0) {
+        _colorIcon = Colors.black;
+        _offset = 0.0;
+        _opacity = 0.0;
+      } else {
+        _colorIcon = primaryColors;
+      }
+
+      _backgroundColor = primaryColors.withOpacity(0.1);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _backgroundColor = primaryColors.withOpacity(0.1);
-    // _backgroundColorSearch = Colors.white;
     _colorIcon = Colors.black;
     _opacity = 0.0;
     _offset = 0.0;
@@ -41,7 +66,7 @@ class _HeaderState extends State<HeaderHome> {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,14 +80,14 @@ class _HeaderState extends State<HeaderHome> {
           );
   }
 
-  _buildSearch() {
+  Widget _buildSearch() {
     return InkWell(
       onTap: () {
         showSearch(context: context, delegate: SearchProduct());
       },
       child: Container(
         height: 40,
-        width: 310,
+        width: 320,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(8),
@@ -89,48 +114,24 @@ class _HeaderState extends State<HeaderHome> {
     );
   }
 
-  _buildCartButton() {
-    return Container(
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CartScreen()));
-        },
+  Widget _buildCartButton() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => CartScreen()));
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10),
         child: badges.Badge(
-          badgeContent: Text('0', style: TextStyle(color: Colors.white)),
+          badgeContent: Center(
+            child: Text(
+              '0',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           child: Icon(Icons.shopping_cart, color: _colorIcon, size: 40),
         ),
       ),
     );
-  }
-
-  _onScroll() {
-    final scrollOffset = widget.scrollController.offset;
-    if (scrollOffset >= _offset && scrollOffset > 5) {
-      _opacity = double.parse((_opacity + _opacityMax).toStringAsFixed(2));
-      if (_opacity >= 1.0) {
-        _opacity = 1.0;
-      }
-      _offset = scrollOffset;
-    } else if (scrollOffset < 100) {
-      _opacity = double.parse((_opacity - _opacityMax).toStringAsFixed(2));
-      if (_opacity <= 0.0) {
-        _opacity = 0.0;
-      }
-    }
-
-    setState(() {
-      if (scrollOffset <= 0) {
-        // _backgroundColorSearch = Colors.white;
-        _colorIcon = Colors.black;
-        _offset = 0.0;
-        _opacity = 0.0;
-      } else {
-        // _backgroundColorSearch = Colors.grey.shade200;
-        _colorIcon = primaryColors;
-      }
-
-      _backgroundColor = primaryColors.withOpacity(0.1);
-    });
   }
 }

@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/utils/constant.dart';
 
 class TitleWithMoreBtn extends StatelessWidget {
-  const TitleWithMoreBtn({super.key, required this.text});
   final String text;
+  const TitleWithMoreBtn({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          SizedBox(
-            child: Text(
+    return Container(
+      // height: 70,
+      child: Padding(
+        padding: EdgeInsets.only(top: 22),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 15),
+            Text(
               text,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-          Spacer(),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              backgroundColor: primaryColors,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: Text(
-              'Xem Thêm',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
