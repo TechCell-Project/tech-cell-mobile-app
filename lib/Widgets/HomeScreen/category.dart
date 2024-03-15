@@ -31,10 +31,8 @@ class _CategoryState extends State<Category> {
           future: ProductAPI().getAllProducts(),
           builder: (context, snapshot) {
             if ((snapshot.hasError) || (!snapshot.hasData)) {
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
 

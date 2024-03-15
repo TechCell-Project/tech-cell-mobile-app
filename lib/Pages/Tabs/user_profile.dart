@@ -19,6 +19,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  
   void signOutUser(BuildContext context) {
     AuthLogin().signOut(context);
   }

@@ -78,7 +78,7 @@ class OrderApi {
       });
 
       http.Response res = await http.post(
-        Uri.parse('${uri}order/review'),
+        Uri.parse('${uri}orders/review'),
         body: bodyData,
         headers: {
           'Authorization': 'Bearer $accessToken',

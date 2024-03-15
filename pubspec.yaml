@@ -53,10 +53,6 @@ dependencies:
   socket_io_client: ^2.0.3+1
   intl: ^0.19.0
   flutter_widget_from_html: ^0.14.11
-  intl: ^0.19.0
-  flutter_rating_bar: ^4.0.1
-  sms_otp_auto_verify: ^2.1.0 
-  socket_io_client: ^2.0.3+1
 
 
 dev_dependencies:

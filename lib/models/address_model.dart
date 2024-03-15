@@ -36,7 +36,7 @@ class AddressModel {
         districtLevel: DistrictLevel.fromJson(json["districtLevel"]),
         wardLevel: WardLevel.fromJson(json["wardLevel"]),
         detail: json["detail"],
-        isDefault: json["isDefault"],
+        isDefault: json["isDefault"] ?? true ,
       );
 
   Map<String, dynamic> toJson() => {

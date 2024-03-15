@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_notification.dart';
 import 'package:my_app/models/notification_model.dart';
+import 'package:my_app/utils/constant.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class NotificationAfterLoginTab extends StatefulWidget {
@@ -73,74 +74,85 @@ class _NotificationAfterLoginTabState extends State<NotificationAfterLoginTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('Thông báo'),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Thông báo",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: primaryColors,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: notifications.data.length,
-                itemBuilder: (context, index) {
-                  DataNotificationUser notification = notifications.data[index];
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: notifications.data.length,
+                  itemBuilder: (context, index) {
+                    DataNotificationUser notification =
+                        notifications.data[index];
 
-                  return Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: ListTile(
-                          onTap: () {
-                            if (!notification.isRead()) {
-                              markNotificationAsRead(notification.id);
-                            }
-                            ;
-                          },
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage:
-                                AssetImage('assets/icons/profile.png'),
+                    return Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: ListTile(
+                            onTap: () {
+                              if (!notification.isRead()) {
+                                markNotificationAsRead(notification.id);
+                              }
+                              ;
+                            },
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  AssetImage('assets/icons/profile.png'),
+                            ),
+                            title: Text(
+                              notification.content,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: notification.isRead()
+                                      ? Colors.grey
+                                      : Colors.black),
+                            ),
+                            subtitle: Text(
+                              notification.createdAt.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: notification.isRead()
+                                      ? Colors.grey
+                                      : Colors.black),
+                            ),
+                            trailing: notification.isRead()
+                                ? null
+                                : Container(
+                                    width: 14,
+                                    height: 14,
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle),
+                                  ),
                           ),
-                          title: Text(
-                            notification.content,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: notification.isRead()
-                                    ? Colors.grey
-                                    : Colors.black),
-                          ),
-                          subtitle: Text(
-                            notification.createdAt.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: notification.isRead()
-                                    ? Colors.grey
-                                    : Colors.black),
-                          ),
-                          trailing: notification.isRead()
-                              ? null
-                              : Container(
-                                  width: 14,
-                                  height: 14,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle),
-                                ),
                         ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.grey,
-                      )
-                    ],
-                  );
-                }),
-          ],
+                        Divider(
+                          thickness: 0.5,
+                          color: Colors.grey,
+                        )
+                      ],
+                    );
+                  }),
+            ],
+          ),
         ),
       ),
     );
