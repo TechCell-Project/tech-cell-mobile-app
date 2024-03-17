@@ -6,7 +6,6 @@ import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Widgets/Cart/open_diaolog_address.dart';
 import 'package:my_app/Pages/Tabs/add_address._tap.dart';
 import 'package:my_app/Pages/Tabs/change_address.dart';
-import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/address_model.dart';
@@ -548,20 +547,8 @@ class _CartTapState extends State<CartTap> {
                 );
               },
             ),
-
           )
         ],
-
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: ButtonSendrequest(
-                text: 'Thanh toán',
-                submit: openDiaologAddress,
-              ),
-            )
-          ],
-        ),
-
       ),
     );
   }
@@ -783,13 +770,5 @@ class _CartTapState extends State<CartTap> {
             ],
           );
         });
-  }
-
-  void getReviewOder() {
-    OrderApi().reviewOrder(
-      context: context,
-      addressSelected: valueChecked,
-      productSelected: (productCart.product),
-    );
   }
 }

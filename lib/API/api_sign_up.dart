@@ -38,7 +38,11 @@ class AuthSignUp {
         context: context,
         onSuccess: () {
           showSnackBarSuccess(context, 'Đăng ký thành công');
-          sendOTPVerifyEmail(context: context, email: email);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VerifyEmail(email: email)));
+          // sendOTPVerifyEmail(context: context, email: email);
         },
       );
     } catch (e) {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:my_app/models/user_model.dart';
+import 'package:my_app/models/user_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager {

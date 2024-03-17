@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Tabs/notification_after_login_tab.dart';
 import 'package:my_app/Providers/token_manager.dart';
-import 'package:my_app/models/user_model.dart';
+import 'package:my_app/models/user_models.dart';
 
 class NotiScreen extends StatefulWidget {
   const NotiScreen({super.key});

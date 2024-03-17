@@ -139,7 +139,8 @@ class OrderApi {
     return orederResPonse;
   }
 
-  Future cancelOrder(BuildContext context, {required String orderId}) async {
+  Future cancelOrder(BuildContext context,
+      {required String orderId, required String reaSon}) async {
     try {
       var accessToken =
           Provider.of<UserProvider>(context, listen: false).user.accessToken;
@@ -147,11 +148,11 @@ class OrderApi {
         final newAccessToken = await AuthLogin.getAccessToken();
         accessToken = newAccessToken!;
       }
-      http.Response res =
-          await http.patch(Uri.parse('${uri}orders-mnt/$orderId'), headers: {
+      http.Response res = await http
+          .put(Uri.parse('${uri}orders-mnt/$orderId/cancel'), headers: {
         'Authorization': 'Bearer $accessToken',
       }, body: {
-        "orderStatus": "cancelled"
+        "cancelReason": reaSon
       });
       httpErrorHandle(
         response: res,
