@@ -139,7 +139,7 @@ class _InFrameState extends State<InFrame> {
                         ],
                       );
                     }
-                    return SizedBox();
+                    return Container();
                   },
                 ),
               ),

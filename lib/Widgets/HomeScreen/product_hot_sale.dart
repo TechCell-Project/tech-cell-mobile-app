@@ -32,10 +32,8 @@ class _ProductHotSaleState extends State<ProductHotSale> {
           future: ProductAPI().getAllProducts(),
           builder: (context, snapshot) {
             if ((snapshot.hasError) || (!snapshot.hasData)) {
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:my_app/models/product_model.dart';
 
@@ -10,7 +9,6 @@ class ProductAPI {
     final url = 'https://api.techcell.cloud/products?select_type=only_active';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
-
     List<ProductModel> result = [];
 
     try {

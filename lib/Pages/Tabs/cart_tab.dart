@@ -310,7 +310,7 @@ class _CartTabState extends State<CartTab> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(50),
                 child: ButtonSendrequest(
                   text: "Xác nhận",
                   submit: getReviewOder,

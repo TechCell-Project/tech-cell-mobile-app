@@ -35,8 +35,8 @@ class _MainScreenState extends State<MainScreen> {
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           child: GNav(
             gap: 4,
-            backgroundColor: Colors.white.withOpacity(0.8),
-            color: Colors.black.withOpacity(0.6),
+            backgroundColor: Colors.white,
+            color: Colors.black,
             activeColor: Colors.white,
             tabBackgroundColor: primaryColors,
             padding: EdgeInsets.all(16),

@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_cart.dart';
+import 'package:my_app/Pages/Screens/cart_screen.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
+import 'package:my_app/utils/snackbar.dart';
 
 class AddToStore extends StatefulWidget {
   final productId;
@@ -69,6 +71,13 @@ class _AddToStoreState extends State<AddToStore> {
       sku: selectedSku.toString(),
       quantity: 1,
     );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartScreen(),
+      ),
+    );
+    showSnackBarSuccess(context, 'Thêm thành công');
   }
 
   @override
