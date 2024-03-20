@@ -18,7 +18,12 @@ class Address {
   ) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
-      String accessToken = userProvider.user.accessToken;
+      var accessToken =
+          Provider.of<UserProvider>(context, listen: false).user.accessToken;
+      if (accessToken.isEmpty) {
+        final newAccessToken = await AuthLogin.getAccessToken();
+        accessToken = newAccessToken!;
+      }
       List<AddressModel> allAddress = userProvider.user.address;
       allAddress.add(address);
       http.Response res = await http.patch(

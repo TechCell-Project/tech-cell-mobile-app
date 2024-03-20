@@ -146,24 +146,13 @@ class ShippingOrder {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'toAddress': toAddress.toJson(),
+      'toAddress': toAddress.toMap(),
     };
   }
 
   factory ShippingOrder.fromMap(Map<String, dynamic> map) {
     return ShippingOrder(
-      toAddress: map['shippingOrder'] != null
-          ? AddressModel.fromMap(map['shippingOrder'])
-          : AddressModel(
-              addressName: '',
-              customerName: '',
-              phoneNumbers: '',
-              provinceLevel: ProvinceLevel(province_id: 0, province_name: ''),
-              districtLevel: DistrictLevel(district_id: 0, district_name: ''),
-              wardLevel: WardLevel(wardCode: '', wardName: ''),
-              detail: '',
-              isDefault: true,
-            ),
+      toAddress: AddressModel.fromJson(map['toAddress'] ?? {}),
     );
   }
 

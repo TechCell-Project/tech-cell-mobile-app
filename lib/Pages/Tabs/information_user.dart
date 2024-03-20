@@ -38,10 +38,10 @@ class _InformationUserState extends State<InformationUser> {
   void initState() {
     super.initState();
     ProfileUser().getProfileUser(context);
-    User user = Provider.of<UserProvider>(context, listen: false).user;
-    fisrtNameController.text = user.firstName;
-    userNameController.text = user.userName;
-    lastNameController.text = user.lastName;
+    // User user = Provider.of<UserProvider>(context, listen: false).user;
+    // fisrtNameController.text = user.firstName;
+    // userNameController.text = user.userName;
+    // lastNameController.text = user.lastName;
   }
 
   @override
@@ -171,9 +171,10 @@ class _InformationUserState extends State<InformationUser> {
                 buildTextField('Id:', user.id),
                 buildTextField('Email:', user.email),
                 buildTextField('Tên tài khoản:', user.userName),
+                buildTextField('Được tạo lúc:',
+                    formatTimestamp(user.createdAt.toString())),
                 buildTextField(
-                    'Được tạo lúc:', formatTimestamp(user.createdAt)),
-                buildTextField('cập nhật ', formatTimestamp(user.updatedAt)),
+                    'cập nhật ', formatTimestamp(user.updatedAt.toString())),
                 const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -337,7 +338,7 @@ class _InformationUserState extends State<InformationUser> {
                 style: ElevatedButton.styleFrom(backgroundColor: primaryColors),
                 child: const Text(
                   'Hoàn thành',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),
@@ -369,7 +370,7 @@ class _InformationUserState extends State<InformationUser> {
       );
       checkavatar = false;
     } else {
-      showSnackBarError(context, 'loi roi');
+      showSnackBarError(context, 'loi trong information');
     }
   }
 
@@ -379,6 +380,10 @@ class _InformationUserState extends State<InformationUser> {
     String label,
     Function()? submit,
   ) {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+    fisrtNameController.text = user.firstName;
+    userNameController.text = user.userName;
+    lastNameController.text = user.lastName;
     return Row(
       children: [
         Expanded(
@@ -394,17 +399,11 @@ class _InformationUserState extends State<InformationUser> {
             label: Text(label),
             border: const OutlineInputBorder(),
             suffixIcon: TextButton(
-                onPressed: isButtonEnabled
-                    ? () {
-                        if (_formKey.currentState!.validate()) {
-                          return;
-                        }
-                      }
-                    : submit,
-                child: const Text(
+                onPressed: isButtonEnabled == true ? null : submit,
+                child: Text(
                   'Thay đổi',
                   style: TextStyle(
-                    color: primaryColors,
+                    color: isButtonEnabled ? primaryColors : Colors.grey,
                   ),
                 )),
           ),

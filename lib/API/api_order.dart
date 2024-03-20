@@ -32,7 +32,7 @@ class OrderApi {
               {"productId": e.productId, "quantity": e.quantity, "sku": e.sku})
           .toList();
       http.Response res = await http.post(
-        Uri.parse('${uri}order'),
+        Uri.parse('${uri}orders'),
         body: jsonEncode({
           "paymentMethod": paymentMethod,
           "addressSelected": addressSelected,
@@ -78,7 +78,7 @@ class OrderApi {
       });
 
       http.Response res = await http.post(
-        Uri.parse('${uri}order/review'),
+        Uri.parse('${uri}orders/review'),
         body: bodyData,
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -109,7 +109,6 @@ class OrderApi {
       BuildContext context, String orderStatus) async {
     OrderResponse orederResPonse = OrderResponse(
         page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []);
-    var userId = Provider.of<UserProvider>(context, listen: false).user.id;
     try {
       var accessToken =
           Provider.of<UserProvider>(context, listen: false).user.accessToken;
@@ -118,11 +117,14 @@ class OrderApi {
         accessToken = newAccessToken!;
       }
       http.Response res = await http.get(
-        Uri.parse('${uri}orders-mnt?userId=$userId&orderStatus=$orderStatus'),
+        Uri.parse('${uri}orders?&orderStatus=$orderStatus'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       );
+      if (res.statusCode == 404) {
+        return orederResPonse;
+      }
       httpErrorHandle(
         response: res,
         context: context,
@@ -134,12 +136,13 @@ class OrderApi {
         },
       );
     } catch (e) {
-      // showSnackBarError(context, e.toString());
+      showSnackBarError(context, e.toString());
     }
     return orederResPonse;
   }
 
-  Future cancelOrder(BuildContext context, {required String orderId}) async {
+  Future cancelOrder(BuildContext context,
+      {required String orderId, required String reaSonCancelled}) async {
     try {
       var accessToken =
           Provider.of<UserProvider>(context, listen: false).user.accessToken;
@@ -148,10 +151,10 @@ class OrderApi {
         accessToken = newAccessToken!;
       }
       http.Response res =
-          await http.patch(Uri.parse('${uri}orders-mnt/$orderId'), headers: {
+          await http.put(Uri.parse('${uri}orders/$orderId/cancel'), headers: {
         'Authorization': 'Bearer $accessToken',
       }, body: {
-        "orderStatus": "cancelled"
+        "cancelReason": reaSonCancelled,
       });
       httpErrorHandle(
         response: res,
@@ -161,6 +164,8 @@ class OrderApi {
           showSnackBarSuccess(context, 'Thanh cong');
         },
       );
-    } catch (e) {}
+    } catch (e) {
+      showSnackBarError(context, e.toString());
+    }
   }
 }
