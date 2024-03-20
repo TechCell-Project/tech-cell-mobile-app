@@ -4,10 +4,6 @@ import 'package:my_app/API/api_product.dart';
 import 'package:my_app/Pages/Tabs/product_detail.dart';
 import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Widgets/Cart/open_diaolog_address.dart';
-import 'package:my_app/Pages/Tabs/add_address._tap.dart';
-import 'package:my_app/Pages/Tabs/change_address.dart';
-import 'package:my_app/Providers/product_provider.dart';
-import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/cart_model.dart';
 import 'package:my_app/models/product_model.dart';
@@ -869,23 +865,30 @@ class _CartTapState extends State<CartTap> {
             child: ButtonSendrequest(
               text: 'Mua hàng',
               submit: () {
-            
-                if (productSelected.contains(true)) {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => OpenDialogAddreess(
-                      productSelected: productSelected,
-                      productCart: productCart.product,
-                    ),
-                  );
-                } else {
-                  showSnackBarError(context, 'Bạn chưa chọn sản phẩm');
-                }
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => OpenDialogAddreess(
+                    productSelected: productSelected,
+                    productCart: productCart.product,
+                  ),
+                );
               },
             ),
-          ),
+
+          )
         ],
+
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: ButtonSendrequest(
+                text: 'Thanh toán',
+                submit: openDiaologAddress,
+              ),
+            )
+          ],
+        ),
+
       ),
     );
   }

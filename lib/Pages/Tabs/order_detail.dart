@@ -16,7 +16,6 @@ import 'package:my_app/models/order_model.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
 
-
 class OrderDetail extends StatefulWidget {
   OrderUser orderDetail;
   OrderDetail({super.key, required this.orderDetail});
@@ -51,7 +50,6 @@ class _OrderDetailState extends State<OrderDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               styleOderStatus(),
-
               Divider(thickness: 0.5),
               _buildShippingAddressOrder(),
               Divider(thickness: 0.5),
@@ -60,7 +58,6 @@ class _OrderDetailState extends State<OrderDetail> {
               __buildPaymentMethodAndSingleCode(),
               Divider(thickness: 0.5),
               _buildOrdersInvoice(),
-
               Container(
                 color: Colors.white,
                 child: Padding(
@@ -82,29 +79,11 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.orderDetail.shippingOrder.toAddress
-                                .customerName),
-                            Text(widget.orderDetail.shippingOrder.toAddress
-                                .phoneNumbers),
-                            Text(widget
-                                .orderDetail.shippingOrder.toAddress.detail),
-                            Row(
-                              children: [
-                                Text(
-                                    '${widget.orderDetail.shippingOrder.toAddress.wardLevel.wardName}, '),
-                                Text(
-                                    '${widget.orderDetail.shippingOrder.toAddress.districtLevel.district_name}, '),
-                                Text(widget.orderDetail.shippingOrder.toAddress
-                                    .provinceLevel.province_name),
-                              ],
-                            ),
-                          ],
-                        ),
+                      Column(
+                        children: [
+                          Text(widget
+                              .orderUser.shippingOrder.toAddress.addressName)
+                        ],
                       )
                     ],
                   ),
@@ -584,32 +563,17 @@ class _OrderDetailState extends State<OrderDetail> {
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(color: Colors.yellow[800]),
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Đơn hàng đang chờ xử lý',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text('Vui lòng chờ đợi',
-                      style: TextStyle(color: Colors.white)),
-                  Text('Cảm ơn bạn đã mua hàng tại Techcell',
-                      style: TextStyle(color: Colors.white))
-                ],
-              ),
               Text(
-                'Vui lòng chờ đợi',
+                'Đơn hàng đang chờ xử lý',
                 style: TextStyle(color: Colors.white),
               ),
-              Text(
-                'Cảm ơn bạn đã mua hàng tại Techcell',
-                style: TextStyle(color: Colors.white),
-              ),
-              Icon(CupertinoIcons.rectangle_paperclip)
+              Text('Vui lòng chờ đợi', style: TextStyle(color: Colors.white)),
+              Text('Cảm ơn bạn đã mua hàng tại Techcell',
+                  style: TextStyle(color: Colors.white))
             ],
           ),
         ),
@@ -1164,12 +1128,7 @@ class _OrderDetailState extends State<OrderDetail> {
         child: ButtonSendrequest(
             text: 'Hủy đơn hàng',
             submit: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: ((context) => ReaSonCancelledOrder(
-                            orderId: widget.orderDetail.id,
-                          ))));
+              OrderApi().cancelOrder(context, orderId: widget.orderUser.id);
             }),
       );
     } else
