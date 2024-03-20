@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Screens/main_screen.dart';
 import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
+import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 248, 119, 110),
+        primaryColor: primaryColors,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MainScreen(),

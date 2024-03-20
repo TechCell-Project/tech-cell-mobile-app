@@ -3,14 +3,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
-import 'package:my_app/Providers/user_provider.dart';
+import 'package:my_app/Providers/token_manager.dart';
 import 'package:my_app/Widgets/HomeScreen/product_hot_sale.dart';
+import 'package:my_app/Widgets/HomeScreen/title_with_more_btn.dart';
 import 'package:my_app/Widgets/ProductDetail/buy_now.dart';
 import 'package:my_app/Widgets/ProductDetail/header_product.dart';
 import 'package:my_app/Widgets/ProductDetail/add_to_store.dart';
 import 'package:my_app/models/product_model.dart';
+import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -484,13 +485,7 @@ class _ProductDetailState extends State<ProductDetail> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-            child: Text(
-              'Gợi ý sản phẩm mua kèm:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+            child: TitleWithMoreBtn(text: 'Sản phẩm nổi bật:'),
           ),
           ProductHotSale(),
         ],
@@ -511,21 +506,35 @@ class _ProductDetailState extends State<ProductDetail> {
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
-                  builder: (context) => Provider.of<UserProvider>(context)
-                          .user
-                          .accessToken
-                          .isEmpty
-                      ? LoginTap()
-                      : AddToStore(
+                  builder: (context) => FutureBuilder<User?>(
+                    future: TokenManager.getUserfromStorage(),
+                    builder: (context, snapshoot) {
+                      if (snapshoot.data == null) {
+                        return LoginTap();
+                      } else {
+                        return AddToStore(
                           productId: widget.productDetail.id,
                           variations: widget.productDetail.variations,
-                        ),
+                        );
+                      }
+                    },
+                  ),
+
+                  //  Provider.of<UserProvider>(context)
+                  //         .user
+                  //         .accessToken
+                  //         .isEmpty
+                  //     ? LoginTap()
+                  //     : AddToStore(
+                  //         productId: widget.productDetail.id,
+                  //         variations: widget.productDetail.variations,
+                  //       ),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: BorderSide(
-                  width: 1,
+                  width: 0.5,
                   color: primaryColors,
                 ),
                 shape: RoundedRectangleBorder(

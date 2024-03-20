@@ -49,7 +49,7 @@ class AuthLogin {
               json.decode(res.body)['firstName'],
               json.decode(res.body)['lastName']);
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const MainScreen()),
+              MaterialPageRoute(builder: (context) =>  MainScreen()),
               (route) => false);
         },
       );

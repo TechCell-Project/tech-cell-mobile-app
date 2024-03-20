@@ -14,15 +14,15 @@ class ButtonInAddress extends StatelessWidget {
       child: ElevatedButton(
         onPressed: functionAddress,
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(55),
+          minimumSize:  Size.fromHeight(55),
           backgroundColor: primaryColors,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: Text(
           textInAddress,
-          style: const TextStyle(fontSize: 20, color: Colors.white),
+          style:  TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );

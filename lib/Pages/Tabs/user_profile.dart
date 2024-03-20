@@ -7,7 +7,7 @@ import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/Widgets/SettingScreen/setting_title.dart';
 import 'package:my_app/models/setting.dart';
-import 'package:my_app/models/user_models.dart';
+import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +69,7 @@ class _UserProfileState extends State<UserProfile> {
                         backgroundImage: user.avatar.url.isEmpty
                             ? const AssetImage('assets/icons/profile.png')
                             : NetworkImage(user.avatar.url) as ImageProvider,
-                        backgroundColor: primaryColors,
+                        backgroundColor: Colors.white,
                       ),
                       const SizedBox(width: 10),
                       Column(
@@ -104,11 +104,13 @@ class _UserProfileState extends State<UserProfile> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
-                      children: List.generate(
-                          settings.length,
-                          (index) => SettingTitle(
-                                settings: settings[index],
-                              ))),
+                    children: List.generate(
+                      settings.length,
+                      (index) => SettingTitle(
+                        settings: settings[index],
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 30),
                 Container(

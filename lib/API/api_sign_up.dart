@@ -74,7 +74,7 @@ class AuthSignUp {
         },
       );
     } catch (e) {
-      showSnackBarError(context, 'loi cho nay');
+      showSnackBarError(context, e.toString());
     }
   }
 
@@ -97,7 +97,7 @@ class AuthSignUp {
         },
       );
     } catch (e) {
-      showSnackBarError(context, 'loi cho nay');
+      showSnackBarError(context, e.toString());
     }
   }
 

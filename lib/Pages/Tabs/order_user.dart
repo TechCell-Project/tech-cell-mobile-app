@@ -21,6 +21,7 @@ class _OrderUserTapState extends State<OrderUserTap>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   ScrollController _scrollController = ScrollController();
+
   OrderResponse orderUser = OrderResponse(
     data: [],
     page: 1,
@@ -28,6 +29,7 @@ class _OrderUserTapState extends State<OrderUserTap>
     totalPage: 1,
     totalRecord: 1,
   );
+
   CartModel productCart = CartModel(
     id: '',
     userId: '',
@@ -35,6 +37,7 @@ class _OrderUserTapState extends State<OrderUserTap>
     product: [],
     cartState: '',
   );
+
   Map<String, OrderResponse> orderData = {
     'pending': OrderResponse(
         page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
@@ -47,6 +50,7 @@ class _OrderUserTapState extends State<OrderUserTap>
     'completed': OrderResponse(
         page: 1, pageSize: 5, totalPage: 11, totalRecord: 11, data: []),
   };
+
   Future<void> fetchDataForOrders() async {
     for (var entry in orderData.entries) {
       try {
@@ -105,17 +109,23 @@ class _OrderUserTapState extends State<OrderUserTap>
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Đơn hàng của bạn',
-            style: TextStyle(color: Colors.black),
+          title: Text(
+            "Đơn hàng",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
           ),
+          leading: BackButton(),
+          backgroundColor: Colors.transparent,
           foregroundColor: primaryColors,
           elevation: 0,
-          backgroundColor: Colors.white,
+          centerTitle: true,
           bottom: TabBar(
             controller: _tabController,
             labelColor: primaryColors,
-            unselectedLabelColor: Colors.black.withOpacity(0.5),
+            unselectedLabelColor: Colors.black,
+            labelStyle: TextStyle(fontSize: 16),
             isScrollable: true,
             indicator: UnderlineTabIndicator(
               borderSide: BorderSide(width: 3, color: primaryColors),
@@ -152,386 +162,263 @@ class _OrderUserTapState extends State<OrderUserTap>
     } else {
       return SingleChildScrollView(
         child: Container(
-          color: const Color.fromARGB(255, 231, 231, 231),
+          color: Color.fromARGB(255, 240, 239, 239),
           child: Column(
             children: [
               ListView.builder(
-                scrollDirection: Axis.vertical,
-                physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: orders.data.length,
-                itemBuilder: ((context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OrderDetail(
-                                      orderUser: orders.data[index])));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
+                itemBuilder: (context, index) {
+                  final order = orders.data[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetail(orderDetail: order),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      color: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 8),
+                      margin: EdgeInsets.symmetric(vertical: 2),
+                      child: Column(
+                        children: [
+                          Row(
                             children: [
                               Row(
                                 children: [
-                                  const Row(
-                                    children: [
-                                      Icon(Icons.store),
-                                      Text('Techcell'),
-                                    ],
+                                  Image(
+                                    image: AssetImage(
+                                      'assets/logos/favicon.ico',
+                                    ),
+                                    width: 20,
                                   ),
-                                  const Spacer(),
-                                  getOrderStatus(
-                                      orders.data[index].oderStatus,
-                                      _getStatusText(
-                                          orders.data[index].oderStatus)),
+                                  SizedBox(width: 2),
+                                  Text('Techcell'),
                                 ],
                               ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: orders.data[index].product.length =
-                                    1,
-                                itemBuilder: (context, indexFirst) {
-                                  final itemCart =
-                                      orders.data[index].product[indexFirst];
-                                  return Container(
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: productProvider.length,
-                                      itemBuilder: (context, indexSecond) {
-                                        final itemProduct =
-                                            productProvider[indexSecond];
-                                        if (itemCart.productId ==
-                                            itemProduct.id) {
-                                          return Container(
-                                            width: 400,
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 20),
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: ListView.builder(
-                                                    shrinkWrap: true,
-                                                    scrollDirection:
-                                                        Axis.vertical,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount: itemProduct
-                                                        .variations.length,
-                                                    itemBuilder:
-                                                        (context, indexThird) {
-                                                      final variation =
-                                                          itemProduct
-                                                                  .variations[
-                                                              indexThird];
-
-                                                      if (itemCart.sku ==
-                                                          variation.sku) {
-                                                        return Row(
+                              Spacer(),
+                              getOrderStatus(order.oderStatus,
+                                  _getStatusText(order.oderStatus)),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: order.product.length,
+                              itemBuilder: (context, indexOrder) {
+                                final orderProduct = order.product[indexOrder];
+                                if (indexOrder == 0) {
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: productProvider.length,
+                                    itemBuilder: (context, indexProduct) {
+                                      final itemProduct =
+                                          productProvider[indexProduct];
+                                      if (orderProduct.productId ==
+                                          itemProduct.id) {
+                                        return Container(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.vertical,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                itemProduct.variations.length,
+                                            itemBuilder:
+                                                (context, indexVariation) {
+                                              final variation = itemProduct
+                                                  .variations[indexVariation];
+                                              if (orderProduct.sku ==
+                                                  variation.sku) {
+                                                return Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 120,
+                                                      width: 120,
+                                                      child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount: variation
+                                                            .images.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final image =
+                                                              variation.images[
+                                                                  index];
+                                                          if (image
+                                                                  .isThumbnail ==
+                                                              true) {
+                                                            return Image(
+                                                              image: NetworkImage(
+                                                                  '${image.url}'),
+                                                            );
+                                                          } else if (index ==
+                                                              0) {
+                                                            return Image(
+                                                              image: NetworkImage(
+                                                                  '${image.url}'),
+                                                            );
+                                                          }
+                                                          return Container();
+                                                        },
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          width: 250,
+                                                          child: Text(
+                                                            '${itemProduct.name}',
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Row(
                                                           children: [
+                                                            Text('Phân loại:'),
                                                             Container(
-                                                              height: 120,
-                                                              width: 120,
+                                                              height:
+                                                                  15, // Adjust the height as needed
+                                                              width: 150,
                                                               child: ListView
                                                                   .builder(
                                                                 scrollDirection:
                                                                     Axis.horizontal,
                                                                 itemCount:
                                                                     variation
-                                                                        .images
+                                                                        .attributes
                                                                         .length,
                                                                 itemBuilder:
                                                                     (context,
                                                                         index) {
-                                                                  final image =
+                                                                  final attribute =
                                                                       variation
-                                                                              .images[
+                                                                              .attributes[
                                                                           index];
-                                                                  if (image
-                                                                          .isThumbnail ==
-                                                                      true) {
-                                                                    return Image(
-                                                                      image: NetworkImage(
-                                                                          '${image.url}'),
-                                                                    );
-                                                                  } else if (index ==
-                                                                      0) {
-                                                                    return Image(
-                                                                      image: NetworkImage(
-                                                                          '${image.url}'),
-                                                                    );
-                                                                  }
-                                                                  return Container();
+                                                                  return Text(
+                                                                    ' ${attribute.v.toUpperCase()}${attribute.u ?? ''}',
+                                                                  );
                                                                 },
                                                               ),
                                                             ),
-
-                                                            // SizedBox(width: 10),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Container(
-                                                                  width: 200,
-                                                                  child: Text(
-                                                                    '${itemProduct.name}',
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    maxLines: 2,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 5),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                        'Phân loại:'),
-                                                                    Container(
-                                                                      height:
-                                                                          15, // Adjust the height as needed
-                                                                      width:
-                                                                          150,
-                                                                      child: ListView
-                                                                          .builder(
-                                                                        scrollDirection:
-                                                                            Axis.horizontal,
-                                                                        itemCount: variation
-                                                                            .attributes
-                                                                            .length,
-                                                                        itemBuilder:
-                                                                            (context,
-                                                                                index) {
-                                                                          final attribute =
-                                                                              variation.attributes[index];
-                                                                          return Text(
-                                                                            ' ${attribute.v.toUpperCase()}${attribute.u ?? ''}',
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 5),
-                                                                if (variation
-                                                                            .price
-                                                                            .sale !=
-                                                                        variation
-                                                                            .price
-                                                                            .base &&
-                                                                    variation
-                                                                            .price
-                                                                            .sale !=
-                                                                        0)
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        '${formatCurrency.format(variation.price.sale)}',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.red,
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              5),
-                                                                      Text(
-                                                                        '-',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .withOpacity(1),
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              5),
-                                                                      Text(
-                                                                        '${formatCurrency.format(variation.price.base)}',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .withOpacity(1),
-                                                                          fontWeight:
-                                                                              FontWeight.w400,
-                                                                          decoration:
-                                                                              TextDecoration.lineThrough,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  )
-                                                                else if (variation
-                                                                        .price
-                                                                        .special !=
-                                                                    0)
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        '${formatCurrency.format(variation.price.special)}',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.red,
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              5),
-                                                                      Text(
-                                                                        '-',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .withOpacity(1),
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              5),
-                                                                      Text(
-                                                                        '${formatCurrency.format(variation.price.base)}',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .withOpacity(1),
-                                                                          fontWeight:
-                                                                              FontWeight.w400,
-                                                                          decoration:
-                                                                              TextDecoration.lineThrough,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  )
-                                                                else
-                                                                  Text(
-                                                                    '${formatCurrency.format(variation.price.base)}',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .red,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontSize:
-                                                                          16,
-                                                                    ),
-                                                                  ),
-                                                                SizedBox(
-                                                                    height: 5),
-                                                                Text(
-                                                                  'Số lượng: ${itemCart.quantity.toString()}',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    color: Colors
-                                                                        .black,
-                                                                  ),
-                                                                ),
-                                                              ],
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              '${formatCurrency.format(variation.price.special)}',
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5),
+                                                            Text(
+                                                              '-',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5),
+                                                            Text(
+                                                              '${formatCurrency.format(variation.price.base)}',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                                fontSize: 16,
+                                                              ),
                                                             ),
                                                           ],
-                                                        );
-                                                      }
-                                                      return Container();
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                        return Container();
-                                      },
-                                    ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                              return Container();
+                                            },
+                                          ),
+                                        );
+                                      }
+                                      return Container();
+                                    },
                                   );
-                                },
+                                }
+                                return Container();
+                              },
+                            ),
+                          ),
+                          Divider(thickness: 1),
+                          Row(
+                            children: [
+                              Text(
+                                "${order.product.length.toString()} sản phẩm",
+                                style: TextStyle(color: Colors.grey),
                               ),
-                              const Divider(
-                                thickness: 1,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "${orders.data[index].product.length.toString()} sản phẩm",
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                  const Spacer(),
-                                  const Image(
-                                    image: AssetImage(
-                                      'assets/logos/favicon.ico',
-                                    ),
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  const Text("Thành tiền: "),
-                                  Text(
-                                    ' ${formatCurrency.format(orders.data[index].checkoutOrder.totalPrice)}',
-                                    style: const TextStyle(
-                                        color: primaryColors, fontSize: 16),
-                                  )
-                                ],
-                              ),
+                              Spacer(),
+                              SizedBox(width: 5),
+                              Text('Thành tiền: '),
+                              Text(
+                                '${formatCurrency.format(orders.data[index].checkoutOrder.totalPrice)}',
+                                style: TextStyle(
+                                  color: primaryColors,
+                                  fontSize: 16,
+                                ),
+                              )
                             ],
                           ),
-                        )),
+                        ],
+                      ),
+                    ),
                   );
-                }),
+                },
               ),
             ],
           ),
@@ -544,7 +431,7 @@ class _OrderUserTapState extends State<OrderUserTap>
     return Row(
       children: [
         Icon(Icons.local_shipping_outlined, color: color),
-        const SizedBox(width: 5),
+        SizedBox(width: 5),
         Text(
           text,
           style: TextStyle(fontSize: 15, color: color),
@@ -568,13 +455,15 @@ class _OrderUserTapState extends State<OrderUserTap>
         statusColor = Colors.transparent;
         break;
     }
+
     return Container(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            styleOrderStatus(statusColor, _getStatusText(status)),
-          ],
-        ));
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          styleOrderStatus(statusColor, _getStatusText(status)),
+        ],
+      ),
+    );
   }
 
   String _getStatusText(String status) {

@@ -31,7 +31,8 @@ class _CategoryState extends State<Category> {
           future: ProductAPI().getAllProducts(),
           builder: (context, snapshot) {
             if ((snapshot.hasError) || (!snapshot.hasData)) {
-              return Container(
+              return Padding(
+                padding: EdgeInsets.all(15),
                 child: Center(
                   child: CircularProgressIndicator(),
                 ),

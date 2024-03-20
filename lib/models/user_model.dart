@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:my_app/models/address_model.dart';
 
 // ignore_for_file: non_constant_identifier_names
