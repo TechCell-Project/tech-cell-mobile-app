@@ -1,8 +1,9 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_app/API/api_order.dart';
+import 'package:my_app/Pages/Tabs/reason_cancelled_order.dart';
 import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/order_model.dart';
@@ -19,6 +20,7 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
+  String reaSonCancelled = '';
   @override
   Widget build(BuildContext context) {
     List<ProductModel> productProvider =
@@ -46,6 +48,8 @@ class _OrderDetailState extends State<OrderDetail> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
@@ -60,11 +64,29 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                         ],
                       ),
-                      Column(
-                        children: [
-                          Text(widget
-                              .orderUser.shippingOrder.toAddress.addressName)
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.orderUser.shippingOrder.toAddress
+                                .customerName),
+                            Text(widget.orderUser.shippingOrder.toAddress
+                                .phoneNumbers),
+                            Text(widget
+                                .orderUser.shippingOrder.toAddress.detail),
+                            Row(
+                              children: [
+                                Text(
+                                    '${widget.orderUser.shippingOrder.toAddress.wardLevel.wardName}, '),
+                                Text(
+                                    '${widget.orderUser.shippingOrder.toAddress.districtLevel.district_name}, '),
+                                Text(widget.orderUser.shippingOrder.toAddress
+                                    .provinceLevel.province_name),
+                              ],
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -537,16 +559,22 @@ class _OrderDetailState extends State<OrderDetail> {
         decoration: BoxDecoration(color: Colors.yellow[800]),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                'Đơn hàng đang chờ xử lý',
-                style: TextStyle(color: Colors.white),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Đơn hàng đang chờ xử lý',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text('Vui lòng chờ đợi',
+                      style: TextStyle(color: Colors.white)),
+                  Text('Cảm ơn bạn đã mua hàng tại Techcell',
+                      style: TextStyle(color: Colors.white))
+                ],
               ),
-              Text('Vui lòng chờ đợi', style: TextStyle(color: Colors.white)),
-              Text('Cảm ơn bạn đã mua hàng tại Techcell',
-                  style: TextStyle(color: Colors.white))
+              Icon(CupertinoIcons.rectangle_paperclip)
             ],
           ),
         ),
@@ -585,7 +613,12 @@ class _OrderDetailState extends State<OrderDetail> {
         child: ButtonSendrequest(
             text: 'Hủy đơn hàng',
             submit: () {
-              OrderApi().cancelOrder(context, orderId: widget.orderUser.id);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => ReaSonCancelledOrder(
+                            orderId: widget.orderUser.id,
+                          ))));
             }),
       );
     } else

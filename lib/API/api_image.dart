@@ -53,7 +53,7 @@ class Avatar {
         return null;
       }
     } catch (e) {
-      showSnackBarError(context, 'allololl');
+      showSnackBarError(context, 'loi o trong file nay');
       return null;
     }
   }

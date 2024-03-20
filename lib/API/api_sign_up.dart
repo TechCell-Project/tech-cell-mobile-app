@@ -37,30 +37,6 @@ class AuthSignUp {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBarSuccess(context, 'Đăng ký thành công');
-          sendOTPVerifyEmail(context: context, email: email);
-        },
-      );
-    } catch (e) {
-      showSnackBarError(context, e.toString());
-    }
-  }
-
-  void sendOTPVerifyEmail({
-    required BuildContext context,
-    required String email,
-  }) async {
-    try {
-      http.Response response = await http.post(
-          Uri.parse('${uri}auth/resend-verify-email-otp'),
-          body: json.encode({'email': email}),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          });
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -70,7 +46,7 @@ class AuthSignUp {
         },
       );
     } catch (e) {
-      showSnackBarError(context, 'loi cho nay');
+      showSnackBarError(context, e.toString());
     }
   }
 
@@ -93,7 +69,7 @@ class AuthSignUp {
         },
       );
     } catch (e) {
-      showSnackBarError(context, 'loi cho nay');
+      showSnackBarError(context, e.toString());
     }
   }
 
