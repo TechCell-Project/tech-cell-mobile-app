@@ -19,7 +19,6 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  
   void signOutUser(BuildContext context) {
     AuthLogin().signOut(context);
   }
@@ -105,11 +104,13 @@ class _UserProfileState extends State<UserProfile> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
-                      children: List.generate(
-                          settings.length,
-                          (index) => SettingTitle(
-                                settings: settings[index],
-                              ))),
+                    children: List.generate(
+                      settings.length,
+                      (index) => SettingTitle(
+                        settings: settings[index],
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 30),
                 Container(

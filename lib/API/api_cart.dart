@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_login.dart';
 import 'package:my_app/Providers/user_provider.dart';

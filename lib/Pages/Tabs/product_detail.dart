@@ -534,7 +534,7 @@ class _ProductDetailState extends State<ProductDetail> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: BorderSide(
-                  width: 1,
+                  width: 0.5,
                   color: primaryColors,
                 ),
                 shape: RoundedRectangleBorder(

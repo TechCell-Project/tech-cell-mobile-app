@@ -2,13 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_app/API/api_order.dart';
+import 'package:my_app/Pages/Screens/main_screen.dart';
 import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/Widgets/Address/button_in_address.dart';
 import 'package:my_app/models/address_model.dart';
 import 'package:my_app/models/order_model.dart';
 import 'package:my_app/utils/constant.dart';
+import 'package:my_app/utils/snackbar.dart';
 import 'package:provider/provider.dart';
+
 class ConfirmOrder extends StatefulWidget {
   OrderReviewResponse orderResponse;
 
@@ -47,6 +50,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
       addressSelected: widget.orderResponse.addressSelected,
       product: widget.orderResponse.product,
     );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainScreen(),
+      ),
+    );
+    showSnackBarSuccess(context, 'Đặt hàng thành công');
   }
 
   @override
@@ -104,7 +115,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
           Row(
             children: [
               Icon(
-                Icons.add_location_outlined,
+                Icons.location_on,
                 color: primaryColors,
               ),
               SizedBox(width: 5),
@@ -118,6 +129,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
               ),
             ],
           ),
+          SizedBox(height: 10),
           Container(
             padding: EdgeInsets.only(left: 30),
             child: Row(

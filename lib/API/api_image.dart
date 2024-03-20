@@ -1,5 +1,5 @@
 // ignore: avoid_web_libraries_in_flutter
-
+// ignore: depend_on_referenced_packages
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
@@ -12,7 +12,6 @@ import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:my_app/utils/snackbar.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http_parser/http_parser.dart';
 
 class Avatar {

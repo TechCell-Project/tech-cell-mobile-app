@@ -17,11 +17,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
 
-  @override
-  void dispose() {
-    super.dispose();
-    scrollController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   scrollController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -32,7 +32,7 @@ class OrderApi {
               {"productId": e.productId, "quantity": e.quantity, "sku": e.sku})
           .toList();
       http.Response res = await http.post(
-        Uri.parse('${uri}order'),
+        Uri.parse('${uri}orders'),
         body: jsonEncode({
           "paymentMethod": paymentMethod,
           "addressSelected": addressSelected,
@@ -118,7 +118,8 @@ class OrderApi {
         accessToken = newAccessToken!;
       }
       http.Response res = await http.get(
-        Uri.parse('${uri}orders-mnt?userId=$userId&orderStatus=$orderStatus'),
+        // Uri.parse('${uri}orders-mnt?userId=$userId&orderStatus=$orderStatus'),
+        Uri.parse('${uri}orders?&orderStatus=$orderStatus'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
