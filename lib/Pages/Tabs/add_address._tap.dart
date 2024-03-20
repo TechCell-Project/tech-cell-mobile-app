@@ -32,6 +32,7 @@ class _AddAddressTapState extends State<AddAddressTap> {
 //giúp hiện các widget sau khi chọn ở trên
   bool isProvinceSelected = false;
   bool isDistrictSelected = false;
+  bool isDefaul = false;
 
   void addAddress() {
     if (_formKey.currentState!.validate()) {
@@ -51,7 +52,7 @@ class _AddAddressTapState extends State<AddAddressTap> {
               wardCode: selectedWards!.wardCode,
               wardName: selectedWards!.wardName),
           detail: detailController.text,
-          isDefault: false,
+          isDefault: isDefaul,
         ),
       );
     }
@@ -250,9 +251,12 @@ class _AddAddressTapState extends State<AddAddressTap> {
                 validate: (value) => Validator.validateText(value ?? ''),
               ),
               const SizedBox(height: 50),
-              ButtonInAddress(
-                functionAddress: addAddress,
-                textInAddress: 'Thêm địa chỉ',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ButtonInAddress(
+                  functionAddress: addAddress,
+                  textInAddress: 'Thêm địa chỉ',
+                ),
               )
             ],
           ),
