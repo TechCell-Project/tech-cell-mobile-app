@@ -314,6 +314,7 @@ class _AddToStoreState extends State<AddToStore> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
+                              color: Colors.white,
                             ),
                           ),
                         ],

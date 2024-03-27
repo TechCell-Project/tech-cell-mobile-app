@@ -4,10 +4,15 @@ import 'package:my_app/Providers/product_provider.dart';
 import 'package:my_app/Providers/user_provider.dart';
 import 'package:my_app/utils/constant.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(Duration(seconds: 2));
+  FlutterNativeSplash.remove();
   UserProvider userProvider = UserProvider();
+
   await userProvider.loadUserFromStorage();
   runApp(MultiProvider(
     providers: [

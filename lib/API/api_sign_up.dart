@@ -42,35 +42,6 @@ class AuthSignUp {
               context,
               MaterialPageRoute(
                   builder: (context) => VerifyEmail(email: email)));
-          // sendOTPVerifyEmail(context: context, email: email);
-        },
-      );
-    } catch (e) {
-      showSnackBarError(context, e.toString());
-    }
-  }
-
-  void sendOTPVerifyEmail({
-    required BuildContext context,
-    required String email,
-  }) async {
-    try {
-      http.Response response = await http.post(
-          Uri.parse('${uri}auth/resend-verify-email-otp'),
-          body: json.encode({'email': email}),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          });
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VerifyEmail(email: email),
-            ),
-          );
         },
       );
     } catch (e) {
