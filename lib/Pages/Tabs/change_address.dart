@@ -135,7 +135,7 @@ class _ChangeAddressState extends State<ChangeAddress> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Địa chỉ mới',
+          'Chỉnh sửa Thông tin nhận hàng',
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: primaryColors,
@@ -394,7 +394,45 @@ class _ChangeAddressState extends State<ChangeAddress> {
                 padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: () {
-                    deleteAddressUser(widget.index);
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.zero),
+                              side: BorderSide.none),
+                          title:
+                              Text('Bạn chắc chắn muốn xóa địa chỉ này chứ? '),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white),
+                              child: const Text(
+                                'Hủy',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                deleteAddressUser(widget.index);
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryColors),
+                              child: const Text(
+                                'Xác nhận',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(55),

@@ -37,12 +37,11 @@ class AuthSignUp {
         response: res,
         context: context,
         onSuccess: () {
+          showSnackBarSuccess(context, 'Đăng ký thành công');
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VerifyEmail(email: email),
-            ),
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VerifyEmail(email: email)));
         },
       );
     } catch (e) {

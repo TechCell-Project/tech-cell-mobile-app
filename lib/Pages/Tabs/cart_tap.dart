@@ -465,7 +465,7 @@ class _CartTapState extends State<CartTap> {
                                                           child: Text(
                                                             '${itemCart.quantity.toString()}',
                                                             style: TextStyle(
-                                                              fontSize: 16,
+                                                              fontSize: 14,
                                                               color:
                                                                   Colors.black,
                                                             ),
@@ -527,299 +527,7 @@ class _CartTapState extends State<CartTap> {
                   );
                 },
               );
-              // Container(
-              //   child: ListView.builder(
-              //     shrinkWrap: true,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     scrollDirection: Axis.vertical,
-              //     itemCount: productProvider.length,
-              //     itemBuilder: (context, indexProduct) {
-              //       final itemProduct = productProvider[indexProduct];
-              //       if (itemCart.productId == itemProduct.id) {
-              //         return Dismissible(
-              //           key: Key(itemCart.productId),
-              //           direction: DismissDirection.endToStart,
-              //           onDismissed: (direction) {
-              //             deleteCart(indexCart);
-              //           },
-              //           background: Container(
-              //             color: Colors.red,
-              //             alignment: Alignment.centerRight,
-              //             child: Center(
-              //               child: Icon(
-              //                 Icons.delete,
-              //                 color: Colors.white,
-              //                 size: 40,
-              //               ),
-              //             ),
-              //           ),
-              //           child: Container(
-              //             width: 400,
-              //             padding: EdgeInsets.symmetric(vertical: 10),
-              //             margin: EdgeInsets.symmetric(vertical: 5),
-              //             decoration: BoxDecoration(
-              //               color: Color.fromARGB(255, 240, 239, 239),
-              //               borderRadius: BorderRadius.circular(10),
-              //             ),
-              //             child: Row(
-              //               children: [
-              //                 Padding(
-              //                   padding: EdgeInsets.symmetric(horizontal: 10),
-              //                   child: SizedBox(
-              //                     width: 10,
-              //                     child: Checkbox(
-              //                       activeColor: primaryColors,
-              //                       value: productSelected[indexCart],
-              //                       onChanged: (bool? value) {
-              //                         setState(() {
-              //                           productSelected[indexCart] =
-              //                               value ?? false;
-              //                           if (!value!) {
-              //                             selectAll = false;
-              //                           } else {
-              //                             selectAll = productSelected.every(
-              //                                 (isSelected) => isSelected);
-              //                           }
-              //                         });
-              //                       },
-              //                     ),
-              //                   ),
-              //                 ),
-              //                 Expanded(
-              //                   child: ListView.builder(
-              //                     shrinkWrap: true,
-              //                     scrollDirection: Axis.vertical,
-              //                     physics: NeverScrollableScrollPhysics(),
-              //                     itemCount: itemProduct.variations.length,
-              //                     itemBuilder: (context, indexVariation) {
-              //                       final variation =
-              //                           itemProduct.variations[indexVariation];
-
-              //                       if (itemCart.sku == variation.sku) {
-              //                         return Row(
-              //                           children: [
-              //                             Container(
-              //                               height: 120,
-              //                               width: 120,
-              //                               child: ListView.builder(
-              //                                 scrollDirection: Axis.horizontal,
-              //                                 itemCount:
-              //                                     variation.images.length,
-              //                                 itemBuilder: (context, index) {
-              //                                   final image =
-              //                                       variation.images[index];
-              //                                   if (image.isThumbnail == true) {
-              //                                     return Image(
-              //                                       image: NetworkImage(
-              //                                           '${image.url}'),
-              //                                     );
-              //                                   } else if (index == 0) {
-              //                                     return Image(
-              //                                       image: NetworkImage(
-              //                                           '${image.url}'),
-              //                                     );
-              //                                   }
-              //                                   return Container();
-              //                                 },
-              //                               ),
-              //                             ),
-              //                             SizedBox(width: 5),
-              //                             Column(
-              //                               crossAxisAlignment:
-              //                                   CrossAxisAlignment.start,
-              //                               children: [
-              //                                 Container(
-              //                                   width: 220,
-              //                                   child: Text(
-              //                                     '${itemProduct.name}',
-              //                                     overflow:
-              //                                         TextOverflow.ellipsis,
-              //                                     maxLines: 1,
-              //                                     style: TextStyle(
-              //                                       color: Colors.black,
-              //                                       fontSize: 18,
-              //                                       fontWeight: FontWeight.w400,
-              //                                     ),
-              //                                   ),
-              //                                 ),
-              //                                 SizedBox(height: 5),
-              //                                 Row(
-              //                                   children: [
-              //                                     Text('Phân loại:'),
-              //                                     Container(
-              //                                       height:
-              //                                           15, // Adjust the height as needed
-              //                                       width: 150,
-              //                                       child: ListView.builder(
-              //                                         scrollDirection:
-              //                                             Axis.horizontal,
-              //                                         itemCount: variation
-              //                                             .attributes.length,
-              //                                         itemBuilder:
-              //                                             (context, index) {
-              //                                           final attribute =
-              //                                               variation
-              //                                                       .attributes[
-              //                                                   index];
-              //                                           return Text(
-              //                                             ' ${attribute.v.toUpperCase()}${attribute.u ?? ''}',
-              //                                           );
-              //                                         },
-              //                                       ),
-              //                                     ),
-              //                                   ],
-              //                                 ),
-              //                                 SizedBox(height: 5),
-              //                                 Row(
-              //                                   children: [
-              //                                     Text(
-              //                                       '${formatCurrency.format(variation.price.special)}',
-              //                                       style: TextStyle(
-              //                                         color: Colors.red,
-              //                                         fontWeight:
-              //                                             FontWeight.w500,
-              //                                         fontSize: 16,
-              //                                       ),
-              //                                     ),
-              //                                     SizedBox(width: 5),
-              //                                     Text(
-              //                                       '-',
-              //                                       style: TextStyle(
-              //                                         color: Colors.grey
-              //                                             .withOpacity(1),
-              //                                         fontWeight:
-              //                                             FontWeight.w500,
-              //                                         fontSize: 16,
-              //                                       ),
-              //                                     ),
-              //                                     SizedBox(width: 5),
-              //                                     Text(
-              //                                       '${formatCurrency.format(variation.price.base)}',
-              //                                       style: TextStyle(
-              //                                         color: Colors.grey
-              //                                             .withOpacity(1),
-              //                                         fontWeight:
-              //                                             FontWeight.w400,
-              //                                         decoration: TextDecoration
-              //                                             .lineThrough,
-              //                                         fontSize: 16,
-              //                                       ),
-              //                                     ),
-              //                                   ],
-              //                                 ),
-              //                                 SizedBox(height: 5),
-              //                                 Row(
-              //                                   children: [
-              //                                     InkWell(
-              //                                       onTap: () {
-              //                                         deCrementQuantity(
-              //                                             indexCart);
-              //                                       },
-              //                                       child: Container(
-              //                                         decoration: BoxDecoration(
-              //                                           border: Border.all(
-              //                                             color:
-              //                                                 Colors.redAccent,
-              //                                             width: 0.5,
-              //                                           ),
-              //                                           color: Colors.white,
-              //                                           borderRadius:
-              //                                               BorderRadius
-              //                                                   .circular(0),
-              //                                         ),
-              //                                         child: Padding(
-              //                                           padding: EdgeInsets
-              //                                               .symmetric(
-              //                                                   horizontal: 5,
-              //                                                   vertical: 2),
-              //                                           child: Icon(
-              //                                             Icons.remove,
-              //                                             color: Colors.red,
-              //                                           ),
-              //                                         ),
-              //                                       ),
-              //                                     ),
-              //                                     Container(
-              //                                       padding: EdgeInsets.all(2),
-              //                                       decoration: BoxDecoration(
-              //                                         border: Border.all(
-              //                                           color: Colors.redAccent,
-              //                                           width: 0.5,
-              //                                         ),
-              //                                         color: Colors.white,
-              //                                         borderRadius:
-              //                                             BorderRadius.circular(
-              //                                                 0),
-              //                                       ),
-              //                                       child: Padding(
-              //                                         padding:
-              //                                             EdgeInsets.symmetric(
-              //                                                 horizontal: 10,
-              //                                                 vertical: 2.5),
-              //                                         child: Text(
-              //                                           '${itemCart.quantity.toString()}',
-              //                                           style: TextStyle(
-              //                                             fontSize: 16,
-              //                                             color: Colors.black,
-              //                                           ),
-              //                                         ),
-              //                                       ),
-              //                                     ),
-              //                                     InkWell(
-              //                                       onTap: () {
-              //                                         inCrementQuantity(
-              //                                             indexCart);
-              //                                       },
-              //                                       child: Container(
-              //                                         decoration: BoxDecoration(
-              //                                           border: Border.all(
-              //                                             color:
-              //                                                 Colors.redAccent,
-              //                                             width: 0.5,
-              //                                           ),
-              //                                           color: Colors.white,
-              //                                           borderRadius:
-              //                                               BorderRadius
-              //                                                   .circular(0),
-              //                                         ),
-              //                                         child: Padding(
-              //                                           padding: EdgeInsets
-              //                                               .symmetric(
-              //                                                   horizontal: 5,
-              //                                                   vertical: 2),
-              //                                           child: Icon(
-              //                                             Icons.add,
-              //                                             color: Colors.red,
-              //                                           ),
-              //                                         ),
-              //                                       ),
-              //                                     ),
-              //                                   ],
-              //                                 ),
-              //                               ],
-              //                             ),
-              //                           ],
-              //                         );
-              //                       }
-              //                       return Container();
-              //                     },
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ),
-              //         );
-              //       }
-              //       return Container();
-              //     },
-              //   ),
-              // );
-            },
-          ),
-        ),
-      ],
-    );
-  }
+            
 
   Widget _buildTotalAmountAndPayment() {
     return SizedBox(
@@ -862,24 +570,26 @@ class _CartTapState extends State<CartTap> {
           ),
           Padding(
             padding: EdgeInsets.all(15),
-            child: ButtonSendrequest(
-              text: 'Mua hàng',
-              submit: () {
-                if (productSelected.contains(true)) {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => OpenDialogAddreess(
-                      productSelected: productSelected,
-                      productCart: productCart.product,
-                    ),
-                  );
-                } else {
-                  showSnackBarError(context, 'Bạn chưa chọn sản phẩm');
-                }
-              },
-            ),
-          ),
+            child: productSelected == true
+                ? ButtonSendrequest(
+                    text: 'Mua hàng',
+                    submit: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => OpenDialogAddreess(
+                          productSelected: productSelected,
+                          productCart: productCart.product,
+                        ),
+                      );
+                    },
+                  )
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(),
+                    onPressed: () {},
+                    child: Text('Mua hang')),
+          )
+
         ],
       ),
     );

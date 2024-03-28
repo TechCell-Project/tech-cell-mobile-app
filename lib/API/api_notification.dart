@@ -30,6 +30,9 @@ class NotificationApi {
           'Authorization': 'Bearer $accessToken',
         },
       );
+      if (res.statusCode == 404) {
+        return notificationUser;
+      }
       httpErrorHandle(
         response: res,
         context: context,
@@ -45,10 +48,8 @@ class NotificationApi {
           }
         },
       );
-    } catch (e, i) {
-      print('loix $e');
-      print(i);
-      // showSnackBarError(context, e.toString());
+    } catch (e) {
+      showSnackBarError(context, e.toString());
     }
     return notificationUser;
   }

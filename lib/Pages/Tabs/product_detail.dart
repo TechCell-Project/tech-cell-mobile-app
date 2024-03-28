@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:my_app/Pages/Tabs/login_tap.dart';
 import 'package:my_app/Providers/token_manager.dart';
 import 'package:my_app/Widgets/HomeScreen/product_hot_sale.dart';
@@ -12,7 +13,6 @@ import 'package:my_app/Widgets/ProductDetail/add_to_store.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/models/user_model.dart';
 import 'package:my_app/utils/constant.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel productDetail;
@@ -563,38 +563,44 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => BuyNow(
-                    variations: widget.productDetail.variations,
-                    id: widget.productDetail.id,
-                    handleSelectVariation: {},
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColors,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 55, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Mua ngay",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0, left: 5),
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => BuyNow(
+                      variations: widget.productDetail.variations,
+                      id: widget.productDetail.id,
+                      handleSelectVariation: {},
                     ),
-                  ],
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColors,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.08,
+                      vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Mua ngay",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -85,15 +85,39 @@ class _InFrameState extends State<InFrame> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${formatCurrency.format(variation.price.special)}',
-                                style: TextStyle(
-                                  color: primaryColors,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15,
+                              if (variation.price.special != 0)
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${formatCurrency.format(variation.price.special)}',
+                                      style: TextStyle(
+                                        color: primaryColors,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${formatCurrency.format(variation.price.base)}',
+                                      style: TextStyle(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        fontWeight: FontWeight.w400,
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              else
+                                Text(
+                                  '${formatCurrency.format(variation.price.base)}',
+                                  style: TextStyle(
+                                    color: primaryColors,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                  ),
                                 ),
-                              ),
                               SizedBox(height: 8),
                               RatingBar.builder(
                                 initialRating: 3,
@@ -116,24 +140,7 @@ class _InFrameState extends State<InFrame> {
                           ),
                           Column(
                             children: [
-                              Text(
-                                '${formatCurrency.format(variation.price.base)}',
-                                style: TextStyle(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  fontWeight: FontWeight.w400,
-                                  decoration: TextDecoration.lineThrough,
-                                  fontSize: 13,
-                                ),
-                              ),
                               SizedBox(height: 8),
-                              Text(
-                                'Đã bán' + ' ' + '${variation.stock}' + '+',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13,
-                                ),
-                              ),
                             ],
                           ),
                         ],

@@ -150,6 +150,7 @@ class OrderApi {
         final newAccessToken = await AuthLogin.getAccessToken();
         accessToken = newAccessToken!;
       }
+
       http.Response res =
           await http.put(Uri.parse('${uri}orders/$orderId/cancel'), headers: {
         'Authorization': 'Bearer $accessToken',
