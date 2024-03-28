@@ -527,12 +527,7 @@ class _CartTapState extends State<CartTap> {
                   );
                 },
               );
-            },
-          ),
-        ),
-      ],
-    );
-  }
+            
 
   Widget _buildTotalAmountAndPayment() {
     return SizedBox(
@@ -594,6 +589,7 @@ class _CartTapState extends State<CartTap> {
                     onPressed: () {},
                     child: Text('Mua hang')),
           )
+
         ],
       ),
     );

@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:my_app/API/api_product.dart';
@@ -7,10 +8,12 @@ import 'package:my_app/Pages/Tabs/product_detail.dart';
 
 import 'package:my_app/Pages/Tabs/reason_cancelled_order.dart';
 
+
 import 'package:my_app/Widgets/Login/button.dart';
 import 'package:my_app/models/order_model.dart';
 import 'package:my_app/models/product_model.dart';
 import 'package:my_app/utils/constant.dart';
+
 
 class OrderDetail extends StatefulWidget {
   OrderUser orderDetail;
@@ -97,6 +100,10 @@ class _OrderDetailState extends State<OrderDetail> {
           padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
